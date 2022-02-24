@@ -35,7 +35,6 @@ int askUserAboutInitMatrixMethod()
     char options[][MAX_STRING_LEN_OPTIONS] = {
         "массив",
         "матрица",
-        "выход",
     };
     return askUserOptions("Выберите способ инициализации матрицы:", 
         options, sizeof(options) / MAX_STRING_LEN_OPTIONS);
@@ -74,13 +73,11 @@ void fillArrayManually(int *arr, int rows, int cols)
 
 void fillMatrixManually(int** matrix, int rows, int cols)
 {
-    printf("Error");
     for (int i = 0; i < rows; i++)
         for (int j = 0; j < cols; j++)
         {
             printf("arr[%2d][%2d] = ", i+1, j+1);
             scanf("%d", &matrix[i][j]);
-    printf("Error");
         }
 }
 
@@ -96,7 +93,6 @@ void printArray(int *arr, int rows, int cols)
 
 void printMatrix(int **matrix, int rows, int cols)
 {
-    printf("Error");
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
@@ -137,23 +133,23 @@ void printDifferenceBetweenMaxAndMinInRowsForArray(int* arr, int rows, int cols)
     }
 }
 
-void printDifferenceBetweenMaxAndMinInRowsForMatrix(int** arr, int rows, int cols)
+void printDifferenceBetweenMaxAndMinInRowsForMatrix(int** matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
     {
         printf("Разница между максимальным и минимальным элементами в %d строке: %d\n",
-            i+1, findMax(arr[i], cols) - findMin(arr[i], cols));
+            i+1, findMax(matrix[i], cols) - findMin(matrix[i], cols));
     }
 }
 
 int main()
 {
-    int **arr;
-
     int userChoice = askUserAboutInitMatrixMethod();
 
+    printf("\n");
     int rows = askUserAboutNumber("Введите количество строк");
     int cols = askUserAboutNumber("Введите количество столбцов");
+    printf("\n");
 
     switch (userChoice)
     {
@@ -162,7 +158,9 @@ int main()
             int *arr = (int*)malloc(rows * cols * sizeof(int));
 
             fillArrayManually(arr, rows, cols);
+            printf("\nМатрица:\n");
             printArray(arr, rows, cols);
+            printf("\n");
             printDifferenceBetweenMaxAndMinInRowsForArray(arr, rows, cols);
             free(arr);
             break;
@@ -172,8 +170,10 @@ int main()
             int** matrix = mallocMatrix(rows, cols);
 
             fillMatrixManually(matrix, rows, cols);
-            printMatrix(arr, rows, cols);
-            printDifferenceBetweenMaxAndMinInRowsForMatrix(arr, rows, cols);
+            printf("\nМатрица:\n");
+            printMatrix(matrix, rows, cols);
+            printf("\n");
+            printDifferenceBetweenMaxAndMinInRowsForMatrix(matrix, rows, cols);
             freeMatrix(matrix, rows);
             break;
         }
