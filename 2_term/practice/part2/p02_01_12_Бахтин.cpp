@@ -62,37 +62,37 @@ void fillMatrixRandomly(int** matrix, int rows, int cols, int start=-9, int end=
     }
 }
 
-// errno_t fillMatrixFromFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
-// {
-// 	FILE* f;
-// 	if (fopen_s(&f, filename, "r")) return 1;
-// 
-// 	fscanf_s(f, "%d %d\n", &rows, &cols);
-// 
-// 	for (int i = 0; i < rows; i++)
-// 	{
-// 		for (int j = 0; j < cols; j++)
-// 			fscanf_s(f, "%5d ", &matrix[i][j]);
-// 		fscanf_s(f, "\n");
-// 	}
-// 
-// 	fclose(f);
-// 	return 0;
-// }
-// 
-// errno_t fillMatrixFromBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
-// {
-//     FILE* f;
-//     if (fopen_s(&f, filename, "rb")) return 1;
-// 
-//     fread(&rows, sizeof(int), 1, f);
-//     fread(&cols, sizeof(int), 1, f);
-// 
-//     for (int i = 0; i < rows; i++)
-//         fread(&matrix[i], sizeof(int), cols, f);
-// 
-//     return 0;
-// }
+errno_t fillMatrixFromFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
+{
+	FILE* f;
+	if (fopen_s(&f, filename, "r")) return 1;
+
+	fscanf_s(f, "%d %d\n", &rows, &cols);
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+			fscanf_s(f, "%5d ", &matrix[i][j]);
+		fscanf_s(f, "\n");
+	}
+
+	fclose(f);
+	return 0;
+}
+
+errno_t fillMatrixFromBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
+{
+    FILE* f;
+    if (fopen_s(&f, filename, "rb")) return 1;
+
+    fread(&rows, sizeof(int), 1, f);
+    fread(&cols, sizeof(int), 1, f);
+
+    for (int i = 0; i < rows; i++)
+        fread(&matrix[i], sizeof(int), cols, f);
+
+    return 0;
+}
 
 void outputMatrixToScreen(int** matrix, int rows, int cols)
 {
@@ -106,36 +106,36 @@ void outputMatrixToScreen(int** matrix, int rows, int cols)
 	}
 }
 
-// errno_t writeMatrixToFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
-// {
-// 	FILE* f;
-// 	if (fopen_s(&f, filename, "w")) return 1;
-// 	
-// 	fprintf_s(f, "%d %d\n", rows, cols);
-// 
-// 	for (int i = 0; i < rows; i++)
-// 	{
-// 		for (int j = 0; j < cols; j++)
-// 			fprintf_s(f, "%5d ", matrix[i][j]);
-// 		fprintf_s(f, "\n");
-// 	}
-// 
-// 	return 0;
-// }
-// 
-// errno_t writeMatrixToBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
-// {
-// 	FILE* f;
-// 	if (fopen_s(&f, filename, "wb")) return 1;
-// 
-// 	fwrite(&rows, sizeof(int), 1, f);
-// 	fwrite(&cols, sizeof(int), 1, f);
-// 
-// 	for (int i = 0; i < rows; i++)
-// 		fwrite(&matrix[i], sizeof(int), cols, f);
-// 
-// 	return 0;
-// }
+errno_t writeMatrixToFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
+{
+	FILE* f;
+	if (fopen_s(&f, filename, "w")) return 1;
+	
+	fprintf_s(f, "%d %d\n", rows, cols);
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+			fprintf_s(f, "%5d ", matrix[i][j]);
+		fprintf_s(f, "\n");
+	}
+
+	return 0;
+}
+
+errno_t writeMatrixToBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
+{
+	FILE* f;
+	if (fopen_s(&f, filename, "wb")) return 1;
+
+	fwrite(&rows, sizeof(int), 1, f);
+	fwrite(&cols, sizeof(int), 1, f);
+
+	for (int i = 0; i < rows; i++)
+		fwrite(&matrix[i], sizeof(int), cols, f);
+
+	return 0;
+}
 
 int countNegativeNums(int arr[], int size)
 {
@@ -158,14 +158,6 @@ int countProductRowsWhereMoreThanOneNegativeNums(int** matrix, int rows, int col
     }
 
     return product;
-}
-
-void printArr(int* arr, int size)
-{
-    printf("\n");
-    for (int i = 0; i < size; i++)
-        printf("arr[%d] = %d\n", i, arr[i]);
-    printf("\n");
 }
 
 int* arrOfRowsSumOfNegativeOddElems(
@@ -233,18 +225,16 @@ int main()
             sizeof(inputOptions) / MAX_STRING_LEN_OPTIONS)
     )
     {
-        // case 1:
-        //     fillMatrixFromFile(matrix, rows, cols, filename);
-        //     break;
-        // case 2:
-        //     fillMatrixFromBinFile(matrix, rows, cols, filenameBin);
-        //     break;
+        case 1:
+            fillMatrixFromFile(matrix, rows, cols, filename);
+            break;
+        case 2:
+            fillMatrixFromBinFile(matrix, rows, cols, filenameBin);
+            break;
         case 3:
-        {
             scanMatrixSize(rows, cols);
             fillMatrixRandomly(matrix, rows, cols);
             break;
-        }
         case 4:
             exit(0);
             break;
@@ -266,21 +256,21 @@ int main()
         "выход",
     };
 
-    // switch (
-    //     askUserOptions("Выберите способ записи матрицы:", outputOptions, 
-    //         sizeof(outputOptions) / MAX_STRING_LEN_OPTIONS)
-    // )
-    // {
-    //      case 1:
-    //          writeMatrixToFile(matrix, rows, cols, filename);
-    //          break;
-    //      case 2:
-    //          writeMatrixToBinFile(matrix, rows, cols, filenameBin);
-    //          break;
-    //     case 3:
-    //         exit(0);
-    //         break;
-    // }
+    switch (
+        askUserOptions("Выберите способ записи матрицы:", outputOptions, 
+            sizeof(outputOptions) / MAX_STRING_LEN_OPTIONS)
+    )
+    {
+         case 1:
+             writeMatrixToFile(matrix, rows, cols, filename);
+             break;
+         case 2:
+             writeMatrixToBinFile(matrix, rows, cols, filenameBin);
+             break;
+        case 3:
+            exit(0);
+            break;
+    }
 
     printf("\n");
 
