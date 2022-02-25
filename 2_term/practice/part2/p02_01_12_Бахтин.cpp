@@ -62,7 +62,7 @@ void fillMatrixRandomly(int** matrix, int rows, int cols, int start=-9, int end=
     }
 }
 
-errno_t fillMatrixFromFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
+errno_t fillMatrixFromFile(int** matrix, int &rows, int &cols, char filename[])
 {
 	FILE* f;
 	if (fopen_s(&f, filename, "r")) return 1;
@@ -80,7 +80,7 @@ errno_t fillMatrixFromFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, 
 	return 0;
 }
 
-errno_t fillMatrixFromBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int &rows, int &cols, char filename[])
+errno_t fillMatrixFromBinFile(int** matrix, int &rows, int &cols, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "rb")) return 1;
@@ -106,7 +106,7 @@ void outputMatrixToScreen(int** matrix, int rows, int cols)
 	}
 }
 
-errno_t writeMatrixToFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
+errno_t writeMatrixToFile(int** matrix, int rows, int cols, char filename[])
 {
 	FILE* f;
 	if (fopen_s(&f, filename, "w")) return 1;
@@ -123,7 +123,7 @@ errno_t writeMatrixToFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, in
 	return 0;
 }
 
-errno_t writeMatrixToBinFile(int matrix[MAX_LEN_ARRAY][MAX_LEN_ARRAY], int rows, int cols, char filename[])
+errno_t writeMatrixToBinFile(int** matrix, int rows, int cols, char filename[])
 {
 	FILE* f;
 	if (fopen_s(&f, filename, "wb")) return 1;
