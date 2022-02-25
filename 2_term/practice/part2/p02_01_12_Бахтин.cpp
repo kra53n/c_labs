@@ -171,7 +171,7 @@ void printArr(int* arr, int size)
 int* arrOfRowsSumOfNegativeOddElems(
     int** matrix, int rows, int cols)
 {
-    int* arr;
+    int* arr = (int*)malloc(rows * sizeof(int));
     for (int i = 0; i < rows; i++)
     {
         int sum = 0;
