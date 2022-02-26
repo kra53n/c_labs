@@ -32,6 +32,19 @@ char* removeSymbolInString(char* string, char symbol)
     return resString;
 }
 
+char* sliceStr(char* str, int start, int end)
+{
+    char* slicedStr = (char*)malloc(sizeof(char));
+    int i = 0;
+    while (i+start < end)
+    {
+        slicedStr = (char*)realloc(slicedStr, (i+1) * sizeof(char));
+        slicedStr[i++] = str[i + start];
+    }
+    slicedStr[i] = '\0';
+    return slicedStr;
+}
+
 char* genereteStrOfSymbols(int num, char symbol)
 {
     char* str = (char*)malloc(sizeof(char));
@@ -59,14 +72,14 @@ void strCpy(char* str1, char* str2)
 
 int main()
 {
-	char testString[] = "  хаха  so niiiiiceeeee      eeeeeee";
+	char testString[] = "  xaxa  so niiiiiceeeee      eeeeeee";
     char* newString = removeSymbolInString(testString, ' ');
     int numSpaces = countSymbol(testString, ' ');
 
     printf("\n%s. Num of spaces: %d\n", newString, numSpaces);
 
-    strCpy(newString, "I'm string");
-    strCpy(newString, "I'm string");
+    strCpy(newString, shit);
+    strCpy(newString, shit);
     strCpy(newString, genereteStrOfSymbols(numSpaces, '1'));
 
     printf("\n%s. Num of spaces: %d\n", genereteStrOfSymbols(numSpaces, ' '), numSpaces);
