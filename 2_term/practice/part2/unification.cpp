@@ -1,3 +1,5 @@
+/* Выполнение 2 и 12 заданий файла "Занятие №2" */
+
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
@@ -19,7 +21,7 @@ int askUserOptions(
         printf("%s\n", title);
         for (int i = 0; i < elems_num; i++)
             printf("\t%d) %s\n", i + offset, options_names[i]);
-        printf("\nВвод: "); scanf("%d", &option);
+        printf("\nВвод: "); scanf_s("%d", &option);
 
         cond = 0 + offset > option || option > elems_num + offset;
         if (cond)
@@ -33,7 +35,7 @@ float askUserAboutNumberThatBiggerThanArithmeticMeanRowsElems()
 {
     float num;
     printf("Введите число, которое будет больше, чем среднее арифметическое элементов ряда: ");
-    scanf("%f", &num);
+    scanf_s("%f", &num);
     return num;
 }
 
@@ -41,7 +43,7 @@ int scanArrSize(int& size, int sizeMax, const char arrName[])
 {
     do {
         printf("Введите количество %s [0;%d]: ", arrName, sizeMax);
-        scanf("%d", &size);
+        scanf_s("%d", &size);
     } while (size < 0 || size > sizeMax);
     return size;
 }
@@ -72,13 +74,13 @@ errno_t fillMatrixFromFile(float** matrix, int& rows, int& cols, char filename[]
     FILE* f;
     if (fopen_s(&f, filename, "r")) return 1;
 
-    fscanf(f, "%d %d\n", &rows, &cols);
+    fscanf_s(f, "%d %d\n", &rows, &cols);
 
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
-            fscanf(f, "%10.5f ", &matrix[i][j]);
-        fscanf(f, "\n");
+            fscanf_s(f, "%10.2f ", &matrix[i][j]);
+        fscanf_s(f, "\n");
     }
 
     fclose(f);
@@ -104,7 +106,7 @@ void outputMatrixToScreen(float** matrix, int rows, int cols)
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
-            printf("%10.5f\t", matrix[i][j]);
+            printf("%10.2f\t", matrix[i][j]);
         printf("\n");
     }
 }
@@ -119,7 +121,7 @@ errno_t writeMatrixToFile(float** matrix, int rows, int cols, char filename[])
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < cols; j++)
-            fprintf_s(f, "%10.5f ", matrix[i][j]);
+            fprintf_s(f, "%10.2f ", matrix[i][j]);
         fprintf_s(f, "\n");
     }
 
@@ -233,7 +235,7 @@ void numOfRowsLessThenNum(float** matrix, int rows, int cols, int num, int& coun
     }
 }
 
-void fillMatrix(float** matrix, int &rows, int &cols, char filename[], char filenameBin[])
+void fillMatrix(float** matrix, int& rows, int& cols, char filename[], char filenameBin[])
 {
     char options[][MAX_STRING_LEN_OPTIONS] = {
         "из текстового файла",
@@ -247,12 +249,12 @@ void fillMatrix(float** matrix, int &rows, int &cols, char filename[], char file
             sizeof(options) / MAX_STRING_LEN_OPTIONS)
         )
     {
-    // case 1:
-    //     fillMatrixFromFile(matrix, rows, cols, filename);
-    //     break;
-    // case 2:
-    //     fillMatrixFromBinFile(matrix, rows, cols, filenameBin);
-    //     break;
+    case 1:
+        fillMatrixFromFile(matrix, rows, cols, filename);
+        break;
+    case 2:
+        fillMatrixFromBinFile(matrix, rows, cols, filenameBin);
+        break;
     case 3:
         scanMatrixSize(rows, cols);
         fillMatrixRandomly(matrix, rows, cols);
@@ -269,7 +271,7 @@ void processMatrix(float** matrix, int rows, int cols)
         "вывести количество столбцов с 0 элементом)",
         "вывести произведение элементов в строках, где больше одного негативного числа",
         "отсортировать матрицу по строкам. Сортируется по возрастанию суммы нечётных отрицательных элементов между строками",
-        "вывести количество строк, у которых среднее арифметическое элементов мешьше числа",
+        "вывести количество строк, у которых среднее арифметическое элементов мешьше число",
         "выход",
     };
 
@@ -288,7 +290,6 @@ void processMatrix(float** matrix, int rows, int cols)
         break;
     case 3:
         sortRowsByIncreaseNumsNegativeOddElems(matrix, rows, cols);
-        printf("\n\nМатрица, строки которой были отсортированы по сумме отрицательных чисел:\n");
         break;
     case 4:
     {
@@ -296,7 +297,7 @@ void processMatrix(float** matrix, int rows, int cols)
         printf("\n");
         float userNum = askUserAboutNumberThatBiggerThanArithmeticMeanRowsElems();
         numOfRowsLessThenNum(matrix, rows, cols, userNum, count);
-        printf("\nКоличество строк меньше, чем число %7.2f: %d.\n\n", userNum, count);
+        printf("\nКоличество строк меньше, чем число %10.2f: %d.\n\n", userNum, count);
         break;
     }
     case 5:
@@ -306,7 +307,7 @@ void processMatrix(float** matrix, int rows, int cols)
 
 }
 
-void outputMatrix(float** matrix, int rows, int cols, char filename[], char filenameBin[])
+void writeMatrix(float** matrix, int rows, int cols, char filename[], char filenameBin[])
 {
     char options[][MAX_STRING_LEN_OPTIONS] = {
         "в текстовый файл",
@@ -319,12 +320,12 @@ void outputMatrix(float** matrix, int rows, int cols, char filename[], char file
             sizeof(options) / MAX_STRING_LEN_OPTIONS)
         )
     {
-    // case 1:
-    //     writeMatrixToFile(matrix, rows, cols, filename);
-    //     break;
-    // case 2:
-    //     writeMatrixToBinFile(matrix, rows, cols, filenameBin);
-    //     break;
+    case 1:
+        writeMatrixToFile(matrix, rows, cols, filename);
+        break;
+    case 2:
+        writeMatrixToBinFile(matrix, rows, cols, filenameBin);
+        break;
     case 3:
         exit(0);
         break;
@@ -343,10 +344,10 @@ int main()
     char filenameBin[] = "im_file.bin";
 
     fillMatrix(matrix, rows, cols, filename, filenameBin);
-    outputMatrixToScreen(matrix, rows, cols);
+    printf("\nМатрица:\n"); outputMatrixToScreen(matrix, rows, cols); printf("\n");
     processMatrix(matrix, rows, cols);
-    outputMatrixToScreen(matrix, rows, cols);
-    outputMatrix(matrix, rows, cols, filename, filenameBin);
+    printf("\nМатрица:\n"); outputMatrixToScreen(matrix, rows, cols); printf("\n");
+    writeMatrix(matrix, rows, cols, filename, filenameBin);
 
     return 0;
 }
