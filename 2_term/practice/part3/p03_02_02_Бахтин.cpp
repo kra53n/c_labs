@@ -1,18 +1,21 @@
 /* Выполнение 2 и 27 заданий файла "Практика_2_№3.pdf" */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
+int const MAX_STRING_LEN_OPTIONS = 100;
+
 void scanStr(char str[])
 {
-    printf("Введите строку: "); scanf("%[^\n]%*c", str);
+    // printf("Введите строку: "); scanf("%[^\n]%*c", str);
 }
 
 void insertingSpacesInStrCenter()
 {
-    char str[100];
+    char str[100] = "Ho ho ho ho";
     char resstr[100];
-    scanStr(str);
+    //scanStr(str);
 
     int i, j;
     int numspaces = 0;
@@ -28,14 +31,14 @@ void insertingSpacesInStrCenter()
     while (i - j/2 < numspaces)
         resstr[i++] = ' ';
     
-    printf("%s\n", resstr, j);
+    printf("\nРезультат: %s\n\n", resstr, j);
 }
 
 float askUserNum()
 {
 	float num;
 	do {
-		printf("Введите ненулевое число: "); scanf_s("%f", &num);
+		printf("Введите ненулевое число: "); scanf("%f", &num);
 	} while (num == 0);
 	return num;
 }
@@ -55,8 +58,53 @@ float sum()
 	return sum;
 }
 
+int askUserOptions(
+    char const title[],
+    char options_names[][MAX_STRING_LEN_OPTIONS],
+    int elems_num,
+    int offset=1
+)
+{
+    int option, cond;
+
+    do {
+        printf("%s\n", title);
+        for (int i = 0; i < elems_num; i++)
+            printf("\t%d) %s\n", i + offset, options_names[i]);
+        printf("\nВвод: "); scanf("%d", &option);
+
+        cond = 0 + offset > option || option > elems_num + offset - 1;
+        if (cond)
+            printf("\nВведено неверное число! Попробуйте снова.\n");
+    } while (cond);
+
+    return option;
+}
+
 int main()
 {
+    char menuOptions[][MAX_STRING_LEN_OPTIONS] = {
+        "вставить пробелы строки в её центр",
+        "вычислить сумму",
+        "выход",
+    };
+    while (true)
+        switch (askUserOptions(
+            "Меню:", menuOptions,
+            sizeof(menuOptions) / MAX_STRING_LEN_OPTIONS)
+        )
+        {
+            case 1:
+                insertingSpacesInStrCenter();
+                break;
+            case 2:
+                printf("\n");
+                printf("Полученная сумма: %f\n\n", sum());
+                break;
+            case 3:
+                exit(0);
+                break;
+        }
     insertingSpacesInStrCenter();
     return 0;
 }
