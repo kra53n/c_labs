@@ -105,6 +105,6 @@ int main()
                 exit(0);
                 break;
         }
-    insertingSpacesInStrCenter();
+
     return 0;
 }
