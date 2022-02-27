@@ -1,89 +1,37 @@
 #include <stdio.h>
-#include <malloc.h>
 
-int countSymbol(char* string, char symbol)
+void scanStr(char str[])
 {
-    int num = 0;
-    for (int i = 0; string[i] != 0; i++)
-        if (string[i] == symbol)
-            num += 1;
-    return num;
+    printf("Введите строку: "); scanf("%[^\n]%*c", str);
 }
 
-int strLen(char* string)
+void insertingSpacesInStrCenter()
 {
-    int num = 0;
-    for (int i = 0; string[i] != 0; i++)
-        num += 1;
-    return num;
-}
+    char str[100];
+    char resstr[100];
+    scanStr(str);
 
-char* removeSymbolInString(char* string, char symbol)
-{
-    char* resString = (char*)malloc(sizeof(char));
-    int j;
-    for (int i = j = 0; string[i] != 0; i++)
-        if (string[i] != symbol)
-        {
-            resString = (char*)realloc(resString, (j + 1) * sizeof(char));
-            resString[j++] = string[i];
-        }
-    resString[j] = '\0';
-    return resString;
-}
-
-char* sliceStr(char* str, int start, int end)
-{
-    char* slicedStr = (char*)malloc(sizeof(char));
-    int i = 0;
-    while (i+start < end)
+    int i, j;
+    int numspaces = 0;
+    for (i = j = 0; str[i] != 0; i++)
     {
-        slicedStr = (char*)realloc(slicedStr, (i+1) * sizeof(char));
-        slicedStr[i++] = str[i + start];
+        if (str[i] != ' ')
+            resstr[j++] = str[i];
+        else
+            numspaces++;
     }
-    slicedStr[i] = '\0';
-    return slicedStr;
-}
+    resstr[j] = '\0';
 
-char* genereteStrOfSymbols(int num, char symbol)
-{
-    char* str = (char*)malloc(sizeof(char));
-    int i = 0;
-    while (i < num)
-    {
-        str = (char*)realloc(str, (i+1) * sizeof(char));
-        str[i++] = symbol;
-    }
-    str[i] = '\0';
-    return str;
-}
-
-void strCpy(char* str1, char* str2)
-{
-    int str1Len = strLen(str1);
-    int i = 0;
-    while (str2[i] != 0)
-    {
-        str1 = (char*)realloc(str1, (str1Len + i + 1) * sizeof(char));
-        str1[str1Len + i++] = str2[i];
-    }
-    str1[str1Len + i] = '\0';
+    while (i > j/2)
+        resstr[i--] = resstr[i-numspaces];
+    while (i - j/2 < numspaces)
+        resstr[i++] = ' ';
+    
+    printf("%s\n", resstr, j);
 }
 
 int main()
 {
-	char testString[] = "  xaxa  so niiiiiceeeee      eeeeeee";
-    char* newString = removeSymbolInString(testString, ' ');
-    int numSpaces = countSymbol(testString, ' ');
-
-    printf("\n%s. Num of spaces: %d\n", newString, numSpaces);
-
-    strCpy(newString, shit);
-    strCpy(newString, shit);
-    strCpy(newString, genereteStrOfSymbols(numSpaces, '1'));
-
-    printf("\n%s. Num of spaces: %d\n", genereteStrOfSymbols(numSpaces, ' '), numSpaces);
-    printf("\n%s. Num of spaces: %d\n", newString, numSpaces);
-
-	return 0;
+    insertingSpacesInStrCenter();
+    return 0;
 }
