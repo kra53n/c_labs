@@ -62,6 +62,13 @@ float** mallocMatrix(int rows, int cols)
     return matrix;
 }
 
+void freeMatrix(float** matrix, int rows)
+{
+    for (int i = 0; i < rows; i++)
+        free(matrix[i]);
+    free(matrix);
+}
+
 void fillMatrixRandomly(float** matrix, int rows, int cols)
 {
     for (int i = 0; i < rows; i++)
@@ -348,6 +355,8 @@ int main()
     processMatrix(matrix, rows, cols);
     printf("\nМатрица:\n"); outputMatrixToScreen(matrix, rows, cols); printf("\n");
     writeMatrix(matrix, rows, cols, filename, filenameBin);
+
+    freeMatrix(matrix, rows);
 
     return 0;
 }
