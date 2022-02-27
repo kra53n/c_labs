@@ -14,12 +14,10 @@ void insertingSpacesInStrCenter()
     int i, j;
     int numspaces = 0;
     for (i = j = 0; str[i] != 0; i++)
-    {
         if (str[i] != ' ')
             resstr[j++] = str[i];
         else
             numspaces++;
-    }
     resstr[j] = '\0';
 
     while (i > j/2)
