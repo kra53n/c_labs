@@ -8,14 +8,14 @@ int const MAX_STRING_LEN_OPTIONS = 100;
 
 void scanStr(char str[])
 {
-    // printf("Введите строку: "); scanf("%[^\n]%*c", str);
+    printf("Введите строку: "); scanf("%[^\n]%*c", str);
 }
 
 void insertingSpacesInStrCenter()
 {
-    char str[100] = "Ho ho ho ho";
+    char str[100];
     char resstr[100];
-    //scanStr(str);
+    scanStr(str);
 
     int i, j;
     int numspaces = 0;
