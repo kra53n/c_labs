@@ -1,8 +1,8 @@
 CC = g++
 COMPILER_FLAGS = -w
 LINKER_FLAGS = -lSDL2
-OBJS = 2.cpp
-OBJ_NAME = 2
+OBJS = main.cpp
+OBJ_NAME = main
 
 all : $(OBJS)
 		$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
