@@ -1,14 +1,8 @@
 #include <SDL2/SDL.h>
+#include <malloc.h>
 
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 600;
-
-void drawTrianlge(
-    SDL_Renderer* renderer, int x1, int y1, int x2, int y2, int x3, int y3
-)
-{
-    SDL_RenderDrawPoints(renderer, points, count);
-}
 
 int main()
 {
@@ -25,7 +19,12 @@ int main()
     SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 247, 227, 253, 0);
-    SDL_Rect rect = {SCREEN_WIDTH / 5, SCREEN_HEIGHT / 5, SCREEN_WIDTH - SCREEN_WIDTH / 2.5, SCREEN_HEIGHT - SCREEN_HEIGHT / 2.5};
+    SDL_Rect rect = {
+        SCREEN_WIDTH / 5,
+        SCREEN_HEIGHT / 5,
+        SCREEN_WIDTH - SCREEN_WIDTH / 2.5,
+        SCREEN_HEIGHT - SCREEN_HEIGHT / 2.5
+    };
     SDL_RenderFillRect(renderer, &rect);
 
     SDL_RenderPresent(renderer);
