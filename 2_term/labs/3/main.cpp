@@ -15,17 +15,30 @@ int main()
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    SDL_SetRenderDrawColor(renderer, 42, 0, 74, 0);
+    SDL_SetRenderDrawColor(renderer, 94, 81, 125, 0);
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 247, 227, 253, 0);
     SDL_Rect rect = {
         SCREEN_WIDTH / 5,
         SCREEN_HEIGHT / 5,
         SCREEN_WIDTH - SCREEN_WIDTH / 2.5,
         SCREEN_HEIGHT - SCREEN_HEIGHT / 2.5
     };
-    SDL_RenderFillRect(renderer, &rect);
+
+    SDL_SetRenderDrawColor(renderer, 123, 106, 161, 0);
+    SDL_RenderDrawLine(renderer, rect.x, rect.y + rect.h,
+        rect.x + rect.w / 2, rect.y + rect.h / 2);
+    SDL_RenderDrawLine(renderer, rect.x + rect.w / 2, rect.y + rect.h / 2,
+            rect.x + rect.w, rect.y + rect.h);
+
+    SDL_SetRenderDrawColor(renderer, 145, 126, 192, 0);
+    SDL_RenderDrawLine(renderer, rect.x, rect.y,
+        rect.x + rect.w / 2, rect.y + rect.h / 2);
+    SDL_RenderDrawLine(renderer, rect.x + rect.w / 2 , rect.y + rect.h / 2,
+            rect.x + rect.w, rect.y);
+
+    SDL_SetRenderDrawColor(renderer, 163, 141, 214, 0);
+    SDL_RenderDrawRect(renderer, &rect);
 
     SDL_RenderPresent(renderer);
 
