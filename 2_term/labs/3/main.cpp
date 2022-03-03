@@ -72,7 +72,16 @@ void drawNightSky(SDL_Renderer* ren)
     drawStarts(ren, 0 - 40, SCREEN_HEIGHT / 2 - 20, 0.4, 20);
 }
 
-drawFormula(SDL_Renderer* ren, int a, int b)
+void drawFormula(SDL_Renderer* ren, int a, int b)
+{
+    SDL_SetRenderDrawColor(ren, 94, 81, 125, 0);
+    SDL_RenderClear(ren);
+
+    SDL_SetRenderDrawColor(ren, 145, 126, 192, 0);
+    drawPlot(ren, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    SDL_SetRenderDrawColor(ren, 163, 141, 214, 0);
+}
 
 int main()
 {
@@ -85,7 +94,7 @@ int main()
 
     SDL_Renderer* ren = SDL_CreateRenderer(window, -1, 0);
     
-    switch (2)
+    switch (3)
     {
         case 1:
             drawEnvelope(ren);
@@ -94,6 +103,7 @@ int main()
             drawNightSky(ren);
             break;
         case 3:
+            drawFormula(ren, -10, 10);
             break;
     }
 
