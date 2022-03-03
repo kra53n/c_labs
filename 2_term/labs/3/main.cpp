@@ -1,20 +1,15 @@
 #include <SDL2/SDL.h>
 #include <malloc.h>
 
+/* TODO:
+ * - add buttons for choosing exercise 
+ */
+
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 600;
 
-int main()
+void drawEnvelope(SDL_Renderer* renderer)
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    SDL_Window* window = SDL_CreateWindow(
-        u8"Бахтин", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
-    );
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-
     SDL_SetRenderDrawColor(renderer, 94, 81, 125, 0);
     SDL_RenderClear(renderer);
 
@@ -39,6 +34,25 @@ int main()
 
     SDL_SetRenderDrawColor(renderer, 163, 141, 214, 0);
     SDL_RenderDrawRect(renderer, &rect);
+}
+
+int main()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_Window* window = SDL_CreateWindow(
+        u8"Бахтин", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
+    );
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    
+    switch (1)
+    {
+        case 1:
+            drawEnvelope(renderer);
+            break;
+    }
 
     SDL_RenderPresent(renderer);
 
