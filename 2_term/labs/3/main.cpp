@@ -1,9 +1,10 @@
 #include <SDL2/SDL.h>
 #include <malloc.h>
+#include <stdio.h>
 #include <math.h>
 
 /* TODO:
- * - add buttons for choosing exercise 
+ * - add buttons for choosing exercx_stpe 
  */
 
 const int SCREEN_WIDTH  = 800;
@@ -55,10 +56,22 @@ void drawStarts(SDL_Renderer* ren, int x, int y, float step, int scale)
     }
 }
 
-void drawPlot(SDL_Renderer* ren, int x, int y, int scr_wdt, int scr_hgt)
+void drawPlot(SDL_Renderer* ren, int x, int y, int scr_wdt, int scr_hgt, int scale)
 {
     SDL_RenderDrawLine(ren, x, 0, x, scr_hgt);
     SDL_RenderDrawLine(ren, 0, y, scr_wdt, y);
+
+    for (int i = x; i < scr_wdt; i += scale)
+    {
+        SDL_RenderDrawLine(ren, i + scale, y - 8, i + scale, y + 8);
+        SDL_RenderDrawLine(ren, scr_wdt - i, y - 8, scr_wdt - i, y + 8);
+    }
+
+    for (int i = y; i < scr_hgt; i += scale)
+    {
+        SDL_RenderDrawLine(ren, x - 8, i + scale, x + 8, i + scale);
+        SDL_RenderDrawLine(ren, x - 8, scr_hgt - i, x + 8, scr_hgt - i);
+    }
 }
 
 void drawNightSky(SDL_Renderer* ren)
@@ -72,15 +85,36 @@ void drawNightSky(SDL_Renderer* ren)
     drawStarts(ren, 0 - 40, SCREEN_HEIGHT / 2 - 20, 0.4, 20);
 }
 
-void drawFormula(SDL_Renderer* ren, int a, int b)
+void askUserCoefficients(float arr[4])
+{
+    for (int i = 0; i < 4; i++)
+    {
+        printf("Введите k%d коэффициент функции: ", i+1);
+        scanf("%f", &arr[i]);
+    }
+}
+
+void drawGraph(SDL_Renderer* ren, int a, int b, int scale)
 {
     SDL_SetRenderDrawColor(ren, 94, 81, 125, 0);
     SDL_RenderClear(ren);
 
     SDL_SetRenderDrawColor(ren, 145, 126, 192, 0);
-    drawPlot(ren, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT);
+    drawPlot(ren, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, scale);
 
     SDL_SetRenderDrawColor(ren, 163, 141, 214, 0);
+    float coeffs[4]; askUserCoefficients(coeffs);
+    for (float i = -10, step = 0.01; i < 10; i += step)
+    {
+        float x_stp = i + step;
+        SDL_RenderDrawLine(
+            ren,
+            SCREEN_WIDTH / 2 + i * scale,
+            SCREEN_HEIGHT / 2 - (coeffs[0]*i*i*i + coeffs[1]*i*i + coeffs[2]*i + coeffs[3]) * scale,
+            SCREEN_WIDTH / 2 + x_stp * scale,
+            SCREEN_HEIGHT / 2 - (coeffs[0]*x_stp*x_stp*x_stp + coeffs[1]*x_stp*x_stp + coeffs[2]*x_stp + coeffs[3]) * scale
+        );
+    }
 }
 
 int main()
@@ -103,7 +137,7 @@ int main()
             drawNightSky(ren);
             break;
         case 3:
-            drawFormula(ren, -10, 10);
+            drawGraph(ren, -10, 10, 38);
             break;
     }
 
