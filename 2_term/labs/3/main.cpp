@@ -3,9 +3,13 @@
 #include <stdio.h>
 #include <math.h>
 
-/* TODO:
- * - add buttons for choosing exercx_stpe 
+/* Задание:
+ *  Вывести на  экран
+ *   1: конверт
+ *   2: звёздное небо
+ *   3: y = a*x^3 + b*x^2 + c*x + d в интервале от 10 до 10
  */
+
 
 const int SCREEN_WIDTH  = 800;
 const int SCREEN_HEIGHT = 600;
