@@ -45,10 +45,9 @@ void drawEnvelope(SDL_Renderer* ren)
 void drawStarts(SDL_Renderer* ren, int x, int y, float step, int scale)
 {
     float rad = M_PI / 180;
-    float r = 160;
     for (float angle = 0; angle < 270; angle += step)
     {
-        r = 45 * sin(angle / sqrt(2)) * scale;
+        float r = 45 * sin(angle / sqrt(2)) * scale;
         SDL_RenderDrawLine(
                 ren,
                 sin(angle * rad) * r + x,
@@ -132,7 +131,7 @@ int main()
 
     SDL_Renderer* ren = SDL_CreateRenderer(window, -1, 0);
     
-    switch (3)
+    switch (2)
     {
         case 1:
             drawEnvelope(ren);
