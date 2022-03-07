@@ -11,7 +11,7 @@ int win_hgt = 600;
 int win_wdt2 = win_wdt / 2;
 int win_hgt2 = win_hgt / 2;
 
-float rad = M_PI / 180;
+const float RAD = M_PI / 180;
 
 void init()
 {
@@ -71,15 +71,14 @@ void drawMovingRect(int x, int y, int wdt, int hgt, int moves)
 
 void drawCircle(int x, int y, int r)
 {
-    float rad = M_PI / 180;
     for (int i = 0, step = 5; i < 360; i += step)
     {
         SDL_RenderDrawLine(
             ren,
-            x - cos(i * rad) * r,
-            y - sin(i * rad) * r,
-            x - cos((i + step) * rad) * r,
-            y - sin((i + step) * rad) * r
+            x - cos(i * RAD) * r,
+            y - sin(i * RAD) * r,
+            x - cos((i + step) * RAD) * r,
+            y - sin((i + step) * RAD) * r
         );
     }
 }
@@ -93,19 +92,19 @@ void drawCircles()
 
         SDL_SetRenderDrawColor(ren, 223, 224, 226, 0);
         drawCircle(win_wdt2, win_hgt2, 20);
-        drawCircle(win_wdt2 - cos(i * 22 * rad) * 20, win_hgt2 - sin(i * 22 * rad) * 20, 2);
+        drawCircle(win_wdt2 - cos(i * 22 * RAD) * 20, win_hgt2 - sin(i * 22 * RAD) * 20, 2);
 
         drawCircle(win_wdt2, win_hgt2, 40);
-        drawCircle(win_wdt2 - cos(i * 15 * rad) * 40, win_hgt2 - sin(i * 15 * rad) * 40, 3);
+        drawCircle(win_wdt2 - cos(i * 15 * RAD) * 40, win_hgt2 - sin(i * 15 * RAD) * 40, 3);
 
         drawCircle(win_wdt2, win_hgt2, 80);
-        drawCircle(win_wdt2 - cos(i * 10 * rad) * 80, win_hgt2 - sin(i * 10 * rad) * 80, 5);
+        drawCircle(win_wdt2 - cos(i * 10 * RAD) * 80, win_hgt2 - sin(i * 10 * RAD) * 80, 5);
 
         drawCircle(win_wdt2, win_hgt2, 160);
-        drawCircle(win_wdt2 - cos(i * 3 * rad) * 160, win_hgt2 - sin(i * 3 * rad) * 160, 10);
+        drawCircle(win_wdt2 - cos(i * 3 * RAD) * 160, win_hgt2 - sin(i * 3 * RAD) * 160, 10);
 
         drawCircle(win_wdt2, win_hgt2, 280);
-        drawCircle(win_wdt2 - cos(i * 1 * rad) * 280, win_hgt2 - sin(i * 1 * rad) * 280, 15);
+        drawCircle(win_wdt2 - cos(i * 1 * RAD) * 280, win_hgt2 - sin(i * 1 * RAD) * 280, 15);
 
         SDL_RenderPresent(ren);
         SDL_Delay(20);
