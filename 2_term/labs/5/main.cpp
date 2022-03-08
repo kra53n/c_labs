@@ -66,17 +66,6 @@ Circ fillCircRandomly(float border, float min_r, float max_r)
     return circ;
 }
 
-void fillCircsElsNULL(Circ circs[], int num)
-{
-    for (int i = 0; i < num; i++)
-    {
-        circs[i].x = NULL;
-        circs[i].y = NULL;
-        circs[i].r = NULL;
-        circs[i].isDrawing = NULL;
-    }
-}
-
 void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
 {
     float border = 10;
@@ -108,8 +97,18 @@ void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
     }
 }
 
-void stopDrawingClickedCirc()
+void stopDrawingClickedCirc(SDL_Event event, Circ circs[], int num)
 {
+    for (int i = 0; i < num; i++)
+    {
+        int x = circs[i].x - event.button.x;
+        int y = circs[i].y - event.button.y;
+        printf("x: %d, y: %d\n", event.button.x, event.button.y);
+        if (x*x + y*y <= circs[i].r * circs[i].r)
+        {
+            circs[i].isDrawing = false;
+        }
+    }
 }
 
 void drawCircs(Circ circs[], int num)
@@ -123,7 +122,7 @@ void mainLoop()
 {
     SDL_Event event;
     bool isRunning = true;
-    int num = 10; Circ circs[num]; fillCircsElsNULL(circs, num); generateCircCoords(circs, num);
+    int num = 10; Circ circs[num]; generateCircCoords(circs, num);
 
     while (isRunning)
     {
@@ -136,12 +135,10 @@ void mainLoop()
         drawCircs(circs, num);
         SDL_RenderPresent(ren);
 
-        switch (event.type)
-        {
-        case SDL_QUIT:
+        if (event.type == SDL_QUIT)
             isRunning = false;
-            break;
-        }
+        if (event.button.button == SDL_BUTTON_LEFT)
+            stopDrawingClickedCirc(event, circs, num);
     }
 }
 
