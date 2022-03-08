@@ -62,7 +62,7 @@ Circ fillCircRandomly(float border, float min_r, float max_r)
     circ.r = randFloat(min_r, max_r);
     circ.x = randFloat(circ.r + border, winWdt - circ.r - border);
     circ.y = randFloat(circ.r + border, winHgt - circ.r - border);
-    circ.isDrawing = true;
+    circ.isDrawing = false;
     return circ;
 }
 
@@ -108,6 +108,10 @@ void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
     }
 }
 
+void stopDrawingClickedCirc()
+{
+}
+
 void drawCircs(Circ circs[], int num)
 {
     for (int i = 0; i < num; i++)
@@ -132,8 +136,12 @@ void mainLoop()
         drawCircs(circs, num);
         SDL_RenderPresent(ren);
 
-        if (event.type == SDL_QUIT)
+        switch (event.type)
+        {
+        case SDL_QUIT:
             isRunning = false;
+            break;
+        }
     }
 }
 
