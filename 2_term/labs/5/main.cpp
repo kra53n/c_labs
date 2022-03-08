@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <iostream>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -68,7 +69,7 @@ Circ fillCircRandomly(float border, float min_r, float max_r)
 
 void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
 {
-    float border = 10;
+    float border = 20;
 
     circs[0] = fillCircRandomly(border, min_r, max_r);
 
@@ -97,17 +98,21 @@ void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
     }
 }
 
+void startDrawingCirc(Circ circs[], int num)
+{
+    int i = 0;
+    while (circs[i++].isDrawing && i < num);
+    circs[i-1].isDrawing = true;
+}
+
 void stopDrawingClickedCirc(SDL_Event event, Circ circs[], int num)
 {
     for (int i = 0; i < num; i++)
     {
         int x = circs[i].x - event.button.x;
         int y = circs[i].y - event.button.y;
-        printf("x: %d, y: %d\n", event.button.x, event.button.y);
         if (x*x + y*y <= circs[i].r * circs[i].r)
-        {
             circs[i].isDrawing = false;
-        }
     }
 }
 
@@ -128,15 +133,17 @@ void mainLoop()
     {
         SDL_PollEvent(&event);
 
-        SDL_SetRenderDrawColor(ren, 0, 0, 0, 0);
+        SDL_SetRenderDrawColor(ren, 46, 52, 64, 0);
         SDL_RenderClear(ren);
 
-        SDL_SetRenderDrawColor(ren, 255, 255, 255, 0);
+        SDL_SetRenderDrawColor(ren, 76, 86, 106, 0);
         drawCircs(circs, num);
         SDL_RenderPresent(ren);
 
         if (event.type == SDL_QUIT)
             isRunning = false;
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE)
+            startDrawingCirc(circs, num);
         if (event.button.button == SDL_BUTTON_LEFT)
             stopDrawingClickedCirc(event, circs, num);
     }
@@ -146,8 +153,6 @@ int main()
 {
     init();
     mainLoop();
-    //int num = 10; Circ circs[num];
-    //generateCircCoords(circs, num);
     deInit();
 
     return 0;
