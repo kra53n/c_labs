@@ -66,36 +66,44 @@ Circ fillCircRandomly(float border, float min_r, float max_r)
     return circ;
 }
 
-void generateCircCoords(Circ circs[], int num, float min_r=25, float max_r=50)
+void fillCircsElsNULL(Circ circs[], int num)
 {
-    float border = 200;
+    for (int i = 0; i < num; i++)
+    {
+        circs[i].x = NULL;
+        circs[i].y = NULL;
+        circs[i].r = NULL;
+        circs[i].isDrawing = NULL;
+    }
+}
+
+void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
+{
+    float border = 10;
 
     circs[0] = fillCircRandomly(border, min_r, max_r);
 
     for (int i = 1; i != num; i++)
     {
-        bool flag = true;
-        while (flag)
+        while (true)
         {
             circs[i] = fillCircRandomly(border, min_r, max_r);
 
+            bool flag = true;
             for (int j = 0; j < i; j++)
             {
-                if (i == j) continue;
-                // Circle in circle
-                // X
-                bool cond = circs[j].x - circs[j].r >= circs[i].x - circs[i].r;
-                cond=cond&& circs[j].x + circs[j].r <= circs[i].x + circs[i].r;
-                // Y
-                cond=cond&& circs[j].y - circs[j].r >= circs[i].y - circs[i].r;
-                cond=cond&& circs[j].y + circs[j].r <= circs[i].y + circs[i].r;
-
-                if (cond)
+                bool isInserct = (circs[j].x - circs[i].x) * (circs[j].x - circs[i].x) +
+                            (circs[j].y - circs[i].y) * (circs[j].y - circs[i].y) <
+                            (circs[j].r + circs[i].r) * (circs[j].r + circs[i].r);
+                
+                if (isInserct)
                 {
                     flag = false;
                     break;
                 }
             }
+            if (flag)
+                break;
         }
     }
 }
@@ -111,7 +119,7 @@ void mainLoop()
 {
     SDL_Event event;
     bool isRunning = true;
-    int num = 2; Circ circs[num]; generateCircCoords(circs, num);
+    int num = 10; Circ circs[num]; fillCircsElsNULL(circs, num); generateCircCoords(circs, num);
 
     while (isRunning)
     {
