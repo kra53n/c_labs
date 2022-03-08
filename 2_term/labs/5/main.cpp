@@ -56,35 +56,47 @@ float randFloat(float min, float max)
     return ((float)rand() / RAND_MAX) * (max - min) + min;
 }
 
-void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=25)
+Circ fillCircRandomly(float border, float min_r, float max_r)
 {
-    int border = 10;
-    for (int i = 0; i != num; i++)
+    Circ circ;
+    circ.r = randFloat(min_r, max_r);
+    circ.x = randFloat(circ.r + border, winWdt - circ.r - border);
+    circ.y = randFloat(circ.r + border, winHgt - circ.r - border);
+    circ.isDrawing = true;
+    return circ;
+}
+
+void generateCircCoords(Circ circs[], int num, float min_r=25, float max_r=50)
+{
+    float border = 200;
+
+    circs[0] = fillCircRandomly(border, min_r, max_r);
+
+    for (int i = 1; i != num; i++)
     {
-        bool intersect = true;
-        if (i > 0) while (intersect)
+        bool flag = true;
+        while (flag)
         {
-            circs[i].r = randFloat(min_r, max_r);
-            circs[i].x = randFloat(circs[i].r + border, winWdt - circs[i].r - border);
-            circs[i].y = randFloat(circs[i].r + border, winHgt - circs[i].r - border);
-            circs[i].isDrawing = true;
+            circs[i] = fillCircRandomly(border, min_r, max_r);
 
             for (int j = 0; j < i; j++)
             {
-                if (!(circs[j].x - circs[j].r <= circs[i].x + circs[i].r && circs[j].x + circs[j].r <= circs[i].x - circs[i].r ||
-                      circs[j].y - circs[j].r <= circs[i].y + circs[i].r && circs[j].y + circs[j].r <= circs[i].y - circs[i].r))
+                if (i == j) continue;
+                // Circle in circle
+                // X
+                bool cond = circs[j].x - circs[j].r >= circs[i].x - circs[i].r;
+                cond=cond&& circs[j].x + circs[j].r <= circs[i].x + circs[i].r;
+                // Y
+                cond=cond&& circs[j].y - circs[j].r >= circs[i].y - circs[i].r;
+                cond=cond&& circs[j].y + circs[j].r <= circs[i].y + circs[i].r;
+
+                if (cond)
                 {
-                    intersect = false;
+                    flag = false;
                     break;
                 }
             }
         }
-
-        // printf("\nCircle %d\n", i);
-        // printf("\tr: %f", circs[i].r);
-        // printf("\tx: %f", circs[i].x);
-        // printf("\ty: %f", circs[i].y);
-        // printf("\tisDrawing: %d", circs[i].isDrawing);
     }
 }
 
@@ -99,7 +111,7 @@ void mainLoop()
 {
     SDL_Event event;
     bool isRunning = true;
-    int num = 20; Circ circs[num]; generateCircCoords(circs, num);
+    int num = 2; Circ circs[num]; generateCircCoords(circs, num);
 
     while (isRunning)
     {
