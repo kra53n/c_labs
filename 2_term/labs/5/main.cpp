@@ -81,9 +81,10 @@ void generateCircCoords(Circ circs[], int num, float min_r=2.5, float max_r=50)
             bool flag = true;
             for (int j = 0; j < i; j++)
             {
-                bool isInserct = (circs[j].x - circs[i].x) * (circs[j].x - circs[i].x) +
-                            (circs[j].y - circs[i].y) * (circs[j].y - circs[i].y) <
-                            (circs[j].r + circs[i].r) * (circs[j].r + circs[i].r);
+                bool isInserct = 
+                    (circs[j].x - circs[i].x) * (circs[j].x - circs[i].x) +
+                    (circs[j].y - circs[i].y) * (circs[j].y - circs[i].y) <
+                    (circs[j].r + circs[i].r) * (circs[j].r + circs[i].r);
                 
                 if (isInserct)
                 {
