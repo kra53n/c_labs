@@ -10,9 +10,48 @@
  *   3: y = a*x^3 + b*x^2 + c*x + d в интервале от 10 до 10
  */
 
+SDL_Window*   win = NULL;
+SDL_Renderer* ren = NULL;
 
-const int SCREEN_WIDTH  = 800;
-const int SCREEN_HEIGHT = 600;
+int winWdt = 800;
+int winHgt = 600;
+
+int winWdt2 = winWdt / 2;
+int winHgt2 = winHgt / 2;
+
+void deInit(char error)
+{
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+    exit(error);
+}
+
+void init()
+{
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("SDL couldn't init! SDL_Error: %s\n", SDL_GetError());
+        deInit(1);
+    }
+
+    win = SDL_CreateWindow(u8"Бахтин", SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED, winWdt, winHgt, SDL_WINDOW_SHOWN
+    );
+    if (win == NULL)
+    {
+        printf("SDL couldn't init! SDL_Error: %s\n", SDL_GetError());
+        deInit(1);
+    }
+
+    ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+    if (ren == NULL)
+    {
+        printf("SDL couldn't create renderer! SDL_Error: %s\n", SDL_GetError());
+        deInit(1);
+    }
+}
 
 void drawEnvelope(SDL_Renderer* ren)
 {
@@ -20,10 +59,10 @@ void drawEnvelope(SDL_Renderer* ren)
     SDL_RenderClear(ren);
 
     SDL_Rect rect = {
-        SCREEN_WIDTH / 5,
-        SCREEN_HEIGHT / 5,
-        SCREEN_WIDTH - SCREEN_WIDTH / 2.5,
-        SCREEN_HEIGHT - SCREEN_HEIGHT / 2.5
+        winWdt / 5,
+        winHgt / 5,
+        winWdt - winWdt / 2.5,
+        winHgt - winHgt / 2.5
     };
 
     SDL_SetRenderDrawColor(ren, 123, 106, 161, 0);
@@ -84,8 +123,8 @@ void drawNightSky(SDL_Renderer* ren)
 
     SDL_SetRenderDrawColor(ren, 163, 141, 214, 0);
 
-    drawStarts(ren, SCREEN_WIDTH, 0, 0.3, 30);
-    drawStarts(ren, 0 - 40, SCREEN_HEIGHT / 2 - 20, 0.4, 20);
+    drawStarts(ren, winWdt + 50, -30, 0.1, 35);
+    drawStarts(ren, 0 - 40, winHgt / 2 - 20, 0.4, 20);
 }
 
 void askUserCoefficients(float arr[4])
@@ -103,7 +142,7 @@ void drawGraph(SDL_Renderer* ren, int a, int b, int scale)
     SDL_RenderClear(ren);
 
     SDL_SetRenderDrawColor(ren, 145, 126, 192, 0);
-    drawPlot(ren, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, scale);
+    drawPlot(ren, winWdt2, winHgt2, winWdt, winHgt, scale);
 
     SDL_SetRenderDrawColor(ren, 163, 141, 214, 0);
     float coeffs[4]; askUserCoefficients(coeffs);
@@ -112,25 +151,17 @@ void drawGraph(SDL_Renderer* ren, int a, int b, int scale)
         float x_stp = i + step;
         SDL_RenderDrawLine(
             ren,
-            SCREEN_WIDTH / 2 + i * scale,
-            SCREEN_HEIGHT / 2 - (coeffs[0]*i*i*i + coeffs[1]*i*i + coeffs[2]*i + coeffs[3]) * scale,
-            SCREEN_WIDTH / 2 + x_stp * scale,
-            SCREEN_HEIGHT / 2 - (coeffs[0]*x_stp*x_stp*x_stp + coeffs[1]*x_stp*x_stp + coeffs[2]*x_stp + coeffs[3]) * scale
+            winWdt2 + i * scale,
+            winHgt2 - (coeffs[0]*i*i*i + coeffs[1]*i*i + coeffs[2]*i + coeffs[3]) * scale,
+            winWdt2 + x_stp * scale,
+            winHgt2 - (coeffs[0]*x_stp*x_stp*x_stp + coeffs[1]*x_stp*x_stp + coeffs[2]*x_stp + coeffs[3]) * scale
         );
     }
 }
 
 int main()
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    SDL_Window* window = SDL_CreateWindow(
-        u8"Бахтин", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
-    );
-
-    SDL_Renderer* ren = SDL_CreateRenderer(window, -1, 0);
-    
+    init();
     switch (2)
     {
         case 1:
@@ -147,9 +178,7 @@ int main()
     SDL_RenderPresent(ren);
 
     SDL_Delay(5000);
-    SDL_DestroyRenderer(ren);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    deInit(0);
 
     return 0;
 }
