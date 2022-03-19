@@ -7,8 +7,6 @@ SDL_Renderer* ren = NULL;
 
 int winWdt = 800;
 int winHgt = 600;
-int winWdt2 = winWdt / 2;
-int winHgt2 = winHgt / 2;
 
 const float RAD = M_PI / 180;
 
@@ -29,7 +27,7 @@ void init()
         deInit(1);
     }
 
-    win = SDL_CreateWindow(u8"Бахтин", SDL_WINDOWPOS_CENTERED,
+    win = SDL_CreateWindow("Gregory snowman", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, winWdt, winHgt, SDL_WINDOW_SHOWN
     );
     if (win == NULL)
@@ -78,15 +76,24 @@ void drawFillHalfUpCirc(float x, float y, float radius)
     }
 }
 
+void drawStick(int &x, int &y, float direction, float scale, float scaleCirc, float step=1)
+{
+    direction *= RAD;
+    float i = 0;
+    for (; i < scale; i += step)
+        drawFillCirc(cos(direction) * i + x, sin(-direction) * i + y, scaleCirc);
+    x = cos(direction) * i + x;
+    y = sin(-direction) * i + y;
+}
+
 void drawSnowman(int x, int y)
 {
     float square = winWdt < winHgt ? winWdt : winHgt;
-    SDL_Rect snowRect = { winWdt2 - square * 0.2, winHgt2 - square * 0.4,
+    SDL_Rect snowRect = { winWdt / 2 - square * 0.2, winHgt / 2 - square * 0.4,
                           square * 0.4, square * 0.8 };
     SDL_SetRenderDrawColor(ren, 255, 255, 255, 0);
 
     // body
-    SDL_RenderDrawRect(ren, &snowRect);
     drawFillCirc(
         snowRect.x + snowRect.w / 2,
         snowRect.y + snowRect.h - snowRect.w * 0.45,
@@ -149,23 +156,37 @@ void drawSnowman(int x, int y)
 
     // nose
     SDL_SetRenderDrawColor(ren, 225, 138, 31, 0);
-    //printf("snowRect.w * 0.03: %f", snowRect.w * 0.03);
     for (float i = 0; i < snowRect.w * 0.03; i++)
     {
         drawFillCirc(
             snowRect.x + snowRect.w / 2 + snowRect.w * i * 0.01,
             snowRect.y + snowRect.h - snowRect.w * 1.6 + snowRect.w * i * 0.003,
-            snowRect.w / (i*3 + 50)
+            snowRect.w / (i * 3 + 50)
         );
     }
+
+    // arms
+    SDL_SetRenderDrawColor(ren, 139, 90, 43, 255);
+    int arm_x, arm_y;
+    // left arm
+    arm_x = snowRect.x + snowRect.w * 0.89;
+    arm_y = (snowRect.y + snowRect.h) - snowRect.w * 1.2;
+    drawStick(arm_x, arm_y, -40, 80, 7);
+    drawStick(arm_x, arm_y, -120, 100, 5);
+
+    // right arm
+    arm_x = snowRect.x + snowRect.w * 0.11;
+    arm_y = (snowRect.y + snowRect.h) - snowRect.w * 1.2;
+    drawStick(arm_x, arm_y, 220, 80, 7);
+    drawStick(arm_x, arm_y, -55, 100, 5);
  }
 
 int main(int argc, char* argv[])
 {
     init();
-    drawSnowman(winWdt2, winHgt2);
+    drawSnowman(winWdt / 2, winHgt / 2);
     SDL_RenderPresent(ren);
-    SDL_Delay(3000);
+    SDL_Delay(15000);
     deInit(0);
 
     return 0;
