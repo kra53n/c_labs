@@ -145,7 +145,7 @@ void changeSnowflakePosition(Snowflake& s)
     }
 
     s.y += s.r * 0.7;
-    s.x += s.r * 0.44;
+    s.x += 1;
 }
 
 void mainLoop()
