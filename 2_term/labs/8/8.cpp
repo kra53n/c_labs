@@ -59,46 +59,6 @@ int askUserAboutNumber(char const title[])
     return n;
 }
 
-int **initMatrix(int **arr, int &rows, int &cols)
-{
-    rows = askUserAboutNumber("Введите количество строк");
-    cols = askUserAboutNumber("Введите количество столбцов");
-    printf("\n");
-    
-    arr = (int**)malloc(rows * sizeof(int));
-    for (int i = 0; i < rows; i++)
-    {
-        arr[i] = (int*)malloc(cols * sizeof(int));
-
-        for (int j = 0; j < cols; j++)
-        {
-            printf("arr[%2d][%2d] = ", i+1, j+1); scanf("%d", &arr[i][j]);
-        }
-    }
-
-    return arr;
-}
-
-int **initFreeMatrix(int **arr, int &rows, int cols[])
-{
-    rows = askUserAboutNumber("Введите количество строк");
-
-    arr = (int**)malloc(rows * sizeof(int));
-    for (int i = 0; i < rows; i++)
-    {
-        cols[i] = askUserAboutNumber("Введите количество столбцов");
-        arr[i] = (int*)malloc(cols[i] * sizeof(int));
-        printf("\n");
-
-        for (int j = 0; j < cols[i]; j++)
-        {
-            printf("arr[%2d][%2d] = ", i+1, j+1); scanf("%d", &arr[i][j]);
-        }
-    }
-
-    return arr;
-}
-
 void printArray2D(int **arr)
 {
     for (int i = 0; i < rows; i++)
