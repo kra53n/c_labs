@@ -59,24 +59,35 @@ int askUserAboutNumber(char const title[])
     return n;
 }
 
+void createAndFillArrayManually(float **arr, int rows)
+{
+    arr = (float**)malloc(sizeof(float*) * rows);
+    for (int row = 0; row < rows; row++)
+    {
+        int col = 0;
+        do {
+            arr[row] = (float*)realloc(arr, sizeof(float) * (col+1));
+            printf("arr[%d][%d] = ", row+1, col+1); scanf("%f", &arr[row][col]);
+        } while (arr[row][col]);
+    }
+}
+
 void printArray2D(int **arr)
 {
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-            printf("%5d ", arr[i][j]);
-        printf("\n");
-    }
 }
 
 int main()
 {
-    int **arr;
+    float **arr;
 
     switch (askUserAboutFillingArray())
     {
         case 1:
+        {
+            int rows = askUserAboutNumber("\nВведите количество строк");
+            createAndFillArrayManually(arr, rows);
             break;
+        }
         case 2:
             break;
         case 3:
