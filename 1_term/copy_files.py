@@ -1,5 +1,4 @@
 import os
-import re
 import shutil
 
 src_path = r"D:\university\programming\msvs_files"
