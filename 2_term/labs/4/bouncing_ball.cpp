@@ -86,11 +86,13 @@ void screenCircCollision(Circ &c)
     {
         c.x_speed *= -1; c.x = winWdt - c.r;
     }
-    if (c.y + c.r > winHgt)
+    if (c.y + c.r * c.ys > winHgt && c.ys >= 0.9)
     {
-        c.y_speed *= -1;
+        float deformation_speed = 100;
+        c.ys -= 1 / deformation_speed;
+        c.y += c.r / deformation_speed;
+        //c.y_speed *= -1;
     }
-    //c.ys += 0.001;
 }
 
 void updateCirc(Circ &c)
@@ -98,11 +100,8 @@ void updateCirc(Circ &c)
     screenCircCollision(c);
     c.x += 0 * c.x_speed;
 
-    c.ys = 7.8;
-    c.xs = 1.3;
-
-    // if (c.ys >= 1)
-    //     c.y += GRAVIT * c.y_speed;
+    if (c.ys >= 1)
+        c.y += GRAVIT * c.y_speed;
 }
 
 void mainLoop()
