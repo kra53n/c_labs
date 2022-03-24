@@ -72,6 +72,8 @@ void drawFillCric(Circ c)
 
 void screenCircCollision(Circ &c)
 {
+    float deformation_speed = 20;
+
     if (c.x - c.r < 0)
     {
         c.x_speed *= -1;
@@ -86,12 +88,27 @@ void screenCircCollision(Circ &c)
     {
         c.x_speed *= -1; c.x = winWdt - c.r;
     }
-    if (c.y + c.r * c.ys > winHgt && c.ys >= 0.9)
+    if (c.y + c.r * c.ys > winHgt)
     {
-        float deformation_speed = 100;
         c.ys -= 1 / deformation_speed;
+        c.xs += 1 / deformation_speed;
         c.y += c.r / deformation_speed;
-        //c.y_speed *= -1;
+
+        if (c.ys <= 0.8)
+        {
+            c.y = winHgt - c.r * c.ys -1;
+            c.y_speed *= -1;
+        }
+    }
+
+    if (c.y_speed < 0)
+    {
+        if (c.ys < 1)
+        {
+            c.ys += 1 / deformation_speed;
+            c.xs -= 1 / deformation_speed;
+            c.y -= c.r / deformation_speed;
+        }
     }
 }
 
