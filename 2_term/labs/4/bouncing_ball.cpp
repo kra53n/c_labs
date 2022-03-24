@@ -16,8 +16,8 @@ struct Circ{
     float r;
     float xs=1; // x stretching
     float ys=1; // y stretching
-    int xdir = 1; // sign of delta x
-    int ydir = 1; // sign of delta y
+    int x_speed = 1; // sign of delta x
+    int y_speed = 1; // sign of delta y
     float maxh = 0;
 };
 
@@ -58,14 +58,14 @@ void init()
 
 void drawFillCric(Circ c)
 {
-    for (int w = 0; w < c.r * 2; w++)
+    for (int w = 0; w < c.xs * c.r * 2; w++)
     {
-        for (int h = 0; h < c.r * 2; h++)
+        for (int h = 0; h < c.ys * c.r * 2; h++)
         {
-            int dx = c.r - w;
-            int dy = c.r - h;
-            if ((dx * dx + dy * dy) <= (c.r * c.r))
-                SDL_RenderDrawPoint(ren, (c.x + dx) * c.xs, (c.y + dy) * c.ys);
+            int dx = c.xs * c.r - w;
+            int dy = c.ys * c.r - h;
+            if (((dx * dx) / (c.xs * c.xs) + (dy * dy) / (c.ys * c.ys)) <= (c.r * c.r))
+                SDL_RenderDrawPoint(ren, (c.x + dx), (c.y + dy));
         }
     }
 }
@@ -74,31 +74,35 @@ void screenCircCollision(Circ &c)
 {
     if (c.x - c.r < 0)
     {
-        c.xdir *= -1;
+        c.x_speed *= -1;
         c.x = c.r;
     }
     if (c.y - c.r < c.maxh) {
-        c.maxh = (winHgt - c.maxh) * 0.1;
-        c.y = c.maxh + c.r;
-        c.ydir *= -1;
+        // c.maxh = (winHgt - c.maxh) * 0.1;
+        // c.y = c.maxh + c.r;
+        c.y_speed *= -1;
     }
     if (c.x + c.r > winWdt)
     {
-        c.xdir *= -1; c.x = winWdt - c.r;
+        c.x_speed *= -1; c.x = winWdt - c.r;
     }
     if (c.y + c.r > winHgt)
     {
-        c.ydir *= -1;
+        c.y_speed *= -1;
     }
+    //c.ys += 0.001;
 }
 
-void changeCircPos(Circ &c)
+void updateCirc(Circ &c)
 {
     screenCircCollision(c);
-    c.x += 0 * c.xdir;
+    c.x += 0 * c.x_speed;
 
-    if (c.ys >= 1)
-        c.y += GRAVIT * c.ydir;
+    c.ys = 7.8;
+    c.xs = 1.3;
+
+    // if (c.ys >= 1)
+    //     c.y += GRAVIT * c.y_speed;
 }
 
 void mainLoop()
@@ -118,7 +122,7 @@ void mainLoop()
         SDL_SetRenderDrawColor(ren, 80, 73, 69, 255);
 
         drawFillCric(circ);
-        changeCircPos(circ);
+        updateCirc(circ);
 
         SDL_Delay(10);
         SDL_RenderPresent(ren);
