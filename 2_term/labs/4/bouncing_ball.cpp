@@ -8,17 +8,15 @@ SDL_Renderer* ren = NULL;
 int winWdt = 800;
 int winHgt = 600;
 
-const float GRAVIT = 9.807; // 1 pixel is 1 metr
-
 struct Circ{
     float x;
     float y;
     float r;
     float xs=1; // x stretching
     float ys=1; // y stretching
-    int x_speed = 1; // sign of delta x
-    int y_speed = 1; // sign of delta y
-    float maxh = 0;
+    float x_speed = 1;
+    float y_speed = 10;
+    float acceleration = 1;
 };
 
 void deInit(int error)
@@ -72,22 +70,26 @@ void drawFillCric(Circ c)
 
 void screenCircCollision(Circ &c)
 {
-    float deformation_speed = 20;
+    //float deformation_speed = 20;
+    float deformation_speed = 1 * fabs(c.y_speed) / 10;
 
+    // horizontal collision
     if (c.x - c.r < 0)
     {
         c.x_speed *= -1;
         c.x = c.r;
     }
-    if (c.y - c.r < c.maxh) {
-        // c.maxh = (winHgt - c.maxh) * 0.1;
-        // c.y = c.maxh + c.r;
-        c.y_speed *= -1;
-    }
     if (c.x + c.r > winWdt)
     {
         c.x_speed *= -1; c.x = winWdt - c.r;
     }
+
+     // vertical collision
+     if (c.y - c.r < 0)
+     {
+         c.y_speed *= -1;
+     }
+
     if (c.y + c.r * c.ys > winHgt)
     {
         c.ys -= 1 / deformation_speed;
@@ -98,6 +100,8 @@ void screenCircCollision(Circ &c)
         {
             c.y = winHgt - c.r * c.ys -1;
             c.y_speed *= -1;
+            c.y_speed += c.acceleration;
+            c.acceleration += 0.1;
         }
     }
 
@@ -118,14 +122,18 @@ void updateCirc(Circ &c)
     c.x += 0 * c.x_speed;
 
     if (c.ys >= 1)
-        c.y += GRAVIT * c.y_speed;
+    {
+        c.y_speed += c.acceleration;
+        c.y += c.y_speed;
+    }
 }
 
 void mainLoop()
 {
     SDL_Event ev;
 
-    Circ circ = { winWdt/2, 400, 100, 1, 1 };
+    Circ circ = { winWdt/2, 200, 50, 1, 1 };
+
     bool isRunning = true;
     while (isRunning)
     {
