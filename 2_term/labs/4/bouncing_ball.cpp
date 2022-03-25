@@ -70,8 +70,7 @@ void drawFillCric(Circ c)
 
 void screenCircCollision(Circ &c)
 {
-    //float deformation_speed = 20;
-    float deformation_speed = 1 * fabs(c.y_speed) / 10;
+    float deformation_speed = 1 * fabs(c.y_speed);
 
     // horizontal collision
     if (c.x - c.r < 0)
