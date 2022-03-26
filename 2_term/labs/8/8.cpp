@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include <iostream>
 
 /* Задание:
  * Массив представляется указателем на вектор указателей на
@@ -40,6 +39,17 @@ int askUserAboutFillingArray()
         "создать массив, заполнив вручную",
         "загрузить массив из текстового файла",
         "загрузить массив из бинарного файла",
+        "выход",
+    };
+    return askUserOptions("Выберите способ заполнения массива:",
+        options, sizeof(options) / MAX_STRING_LEN_OPTIONS);
+}
+
+int askUserAboutWritingArray()
+{
+    char options[][MAX_STRING_LEN_OPTIONS] = {
+        "сохранить массив в текстовый файл",
+        "сохранить массив в бинарный файл",
         "выход",
     };
     return askUserOptions("Выберите способ заполнения массива:",
@@ -93,6 +103,25 @@ void mallocArray2DForArray(float** arr, int row, int cols)
     arr[row][cols] = NULL;
 }
 
+int getSizeArray2D(float** arr)
+{
+    int size = 0;
+    while (arr[size++] != NULL);
+    return size;
+}
+
+void printArray2D(float** arr)
+{
+    printf("\nМассив:\n");
+    for (int row = 0; arr[row] != NULL; row++)
+    {
+        for (int col = 0; arr[row][col] != NULL; col++)
+            printf("\t%7.2f", arr[row][col]);
+        printf("\n");
+    }
+    printf("\n");
+}
+
 void freeArray(float** arr)
 {
     for (int row = 0; arr[row] != NULL; row++)
@@ -119,17 +148,6 @@ void fillArrayManually(float** arr)
     }
 }
 
-void printArray2D(float** arr)
-{
-    printf("\nМассив:\n");
-    for (int row = 0; arr[row] != NULL; row++)
-    {
-        for (int col = 0; arr[row][col] != 0; col++)
-            printf("\t%7.2f", arr[row][col]);
-        printf("\n");
-    }
-}
-
 float** getArrayFromFile(float** arr, char filename[])
 {
     FILE* f;
@@ -150,9 +168,7 @@ float** getArrayFromFile(float** arr, char filename[])
             
             fseek(f, pos, SEEK_SET);
             for (int col = 0; col < cols; col++)
-            {
                 fscanf_s(f, "%f", &arr[row][col]);
-            }
             fscanf_s(f, "\n");
             pos = ftell(f);
 
@@ -160,14 +176,13 @@ float** getArrayFromFile(float** arr, char filename[])
             cols = 0;
             row++;
         }
-
     }
-
     fclose(f);
+
     return arr;
 }
 
-errno_t writeMatrixToFile(float** arr, char filename[])
+errno_t writeArrayToFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "w")) return 1;
@@ -180,22 +195,48 @@ errno_t writeMatrixToFile(float** arr, char filename[])
         }
         fprintf_s(f, "\n");
     }
-
     return 0;
 }
 
-errno_t fillArrayFromBinFile(float** arr, int& rows, char filename[])
+float** getArrayFromBinFile(float** arr, char filename[])
 {
     FILE* f;
-    if (fopen_s(&f, filename, "rb")) return 1;
+    if (fopen_s(&f, filename, "rb")) exit(1);
 
-    fread(&rows, sizeof(int), 1, f);
-
-    int cols;
-    for (int row = 0; row < rows; row++)
+    int row = 0, col = 0;
+    arr = reallocArray2D(arr, row);
+    float value;
+    while (!feof(f))
     {
-        fread(&cols, sizeof(float), 1, f);
-        fread(&arr[row], sizeof(float), cols, f);
+        fread(&value, sizeof(float), 1, f);
+        if (value == NULL)
+        {
+            row++;
+            arr = reallocArray2D(arr, row);
+            col = 0;
+        }
+        else
+        {
+            arr[row] = (float*)realloc(arr[row], sizeof(float) * (col + 2));
+            arr[row][col++] = value;
+            arr[row][col] = NULL;
+        }
+    }
+
+    return arr;
+}
+
+errno_t writeArrayToBinFile(float** arr, char filename[])
+{
+    FILE* f;
+    if (fopen_s(&f, filename, "wb")) return 1;
+    
+    for (int row = 0; arr[row] != NULL; row++)
+    {
+        int col = 0;
+        while (arr[row][col] != NULL)
+            fwrite(&arr[row][col++], sizeof(float), 1, f);
+        fwrite(&arr[row][col], sizeof(float), 1, f);
     }
 
     return 0;
@@ -221,16 +262,26 @@ int main()
         arr = getArrayFromFile(arr, filename);
         break;
     case 3:
+        arr = getArrayFromBinFile(arr, filenameBin);
         break;
     case 4:
         exit(0);
         break;
     }
-
+    
     printArray2D(arr);
-    writeMatrixToFile(arr, filename);
-    freeArray(arr);
 
-    printf("\n");
+    switch (askUserAboutWritingArray())
+    {
+    case 1:
+        writeArrayToFile(arr, filename);
+        break;
+    case 2:
+        writeArrayToBinFile(arr, filenameBin);
+        break;
+    }
+    
+    freeArray(arr);
+    
     return 0;
 }
