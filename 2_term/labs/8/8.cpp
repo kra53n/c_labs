@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <iostream>
 
 /* Задание:
  * Массив представляется указателем на вектор указателей на
  * строки. Количество строк определяется терминальным символом.
  * Количество элементов строки определяется терминальным символом.
- * Память выделяется одним блоком*/
+ * Память выделяется одним блоком */
 
 const int MAX_STRING_LEN_OPTIONS = 100;
 
@@ -58,63 +59,73 @@ int askUserAboutNumber(char const title[])
     return n;
 }
 
-float** mallocArray(float** arr, int rows)
+float** mallocArray2D(float** arr)
 {
-    arr = (float**)malloc(sizeof(float*) * rows);
+    arr = (float**)malloc(sizeof(float*));
     if (arr == NULL)
     {
         printf("Ошибка выделения памяти!");
         exit(1);
     }
+    return arr;
+}
 
-    for (int row = 0; row < rows; row++)
+float** reallocArray2D(float** arr, int num)
+{
+    arr = (float**)realloc(arr, sizeof(float*) * (num + 1));
+    if (arr == NULL)
     {
-        arr[row] = (float*)malloc(sizeof(float));
-
-        if (arr[row] == NULL)
-        {
-            printf("Ошибка выделения памяти!");
-            exit(1);
-        }
+        printf("Ошибка выделения памяти!");
+        exit(1);
     }
     return arr;
 }
 
-void freeArray(float** arr, int rows)
+void mallocArray2DForArray(float** arr, int row, int cols)
 {
-    for (int row = 0; row < rows; row++)
+    arr[row] = (float*)malloc(sizeof(float) * cols);
+    if (arr[row] == NULL)
+    {
+        printf("Ошибка выделения памяти!");
+        exit(1);
+    }
+    arr[row][cols] = 0;
+}
+
+void freeArray(float** arr)
+{
+    for (int row = -1; arr[row] != NULL; ++row)
         free(arr[row]);
     free(arr);
 }
 
-void fillArrayManually(float** arr, int rows)
+void fillArrayManually(float** arr)
 {
-    for (int row = 0; row < rows; row++)
+    int cols;
+    for (int row = 0; arr[row] != NULL; row++)
     {
-        int col = 0;
-        do {
-            arr[row] = (float*)realloc(arr[row], sizeof(float) * (col + 1));
-            if (arr[row])
-            {
-                printf("Ошибка выделения памяти!");
-                exit(1);
-            }
+        printf("Is problem here?\n");
+        printf("[%d] ", row);
+        cols = askUserAboutNumber("Введите количество элементов для строки");
+        mallocArray2DForArray(arr, row, cols);
 
-            printf("arr[%d][%d] = ", row + 1, col + 1); scanf("%f", &arr[row][col]);
-        } while (arr[row][col++]);
+        for (int col = 0; arr[row][col] != 0; col++)
+        {
+            printf("arr[%d][%d] = ", row + 1, col + 1);
+            scanf("%f", &arr[row][col]);
+        }
 
         printf("\n");
     }
 }
 
-void printArray2D(float** arr, int rows)
+void printArray2D(float** arr)
 {
     printf("\nМассив:\n");
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; arr[row] != NULL; row++)
     {
-        int col = 0;
-        while (arr[row][col])
-            printf("\t%7.2f", arr[row][col++]);
+        for (int col = 0; arr[row][col] != 0; col++)
+            printf("\t%7.2f", arr[row][col]);
         printf("\n");
     }
 }
@@ -178,17 +189,18 @@ errno_t fillArrayFromBinFile(float** arr, int &rows, char filename[])
 int main()
 {
     float** arr = NULL;
-    int rows = NULL;
+    arr = mallocArray2D(arr);
 
     char filename[] = "im_file.txt";
     char filenameBin[] = "im_file.bin";
 
+    int rows = 0;
     switch (askUserAboutFillingArray())
     {
     case 1:
-        rows = askUserAboutNumber("\nВведите количество строк");
-        arr = mallocArray(arr, rows);
-        fillArrayManually(arr, rows);
+        printf("Введите количество строк массива: "); scanf("%d", &rows);
+        arr = reallocArray2D(arr, rows);
+        fillArrayManually(arr);
         break;
     case 2:
         break;
@@ -199,8 +211,8 @@ int main()
         break;
     }
 
-    printArray2D(arr, rows);
-    freeArray(arr, rows);
+    printArray2D(arr);
+    freeArray(arr);
 
     printf("\n");
     return 0;
