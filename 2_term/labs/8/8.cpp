@@ -24,7 +24,7 @@ int askUserOptions(
         printf("%s\n", title);
         for (int i = 0; i < elems_num; i++)
             printf("\t%d) %s\n", i + offset, options_names[i]);
-        printf("\nВвод: "); scanf("%d", &option);
+        printf("\nВвод: "); scanf_s("%d", &option);
 
         cond = offset > option || option > elems_num + offset;
         if (cond)
@@ -51,7 +51,7 @@ int askUserAboutNumber(char const title[])
     int n;
     bool cond;
     do {
-        printf("%s: ", title); scanf("%d", &n);
+        printf("%s: ", title); scanf_s("%d", &n);
         cond = n < 1;
         if (cond)
             printf("Было введено неверное число, оно должно быть больше 0. Попробуйте снова!\n");
@@ -78,23 +78,24 @@ float** reallocArray2D(float** arr, int num)
         printf("Ошибка выделения памяти!");
         exit(1);
     }
+    arr[num] = NULL;
     return arr;
 }
 
 void mallocArray2DForArray(float** arr, int row, int cols)
 {
-    arr[row] = (float*)malloc(sizeof(float) * cols);
+    arr[row] = (float*)malloc(sizeof(float) * (cols + 1));
     if (arr[row] == NULL)
     {
         printf("Ошибка выделения памяти!");
         exit(1);
     }
-    arr[row][cols] = 0;
+    arr[row][cols] = NULL;
 }
 
 void freeArray(float** arr)
 {
-    for (int row = -1; arr[row] != NULL; ++row)
+    for (int row = 0; arr[row] != NULL; row++)
         free(arr[row]);
     free(arr);
 }
@@ -104,15 +105,14 @@ void fillArrayManually(float** arr)
     int cols;
     for (int row = 0; arr[row] != NULL; row++)
     {
-        printf("Is problem here?\n");
-        printf("[%d] ", row);
+        printf("[%d] ", row + 1);
         cols = askUserAboutNumber("Введите количество элементов для строки");
         mallocArray2DForArray(arr, row, cols);
 
-        for (int col = 0; arr[row][col] != 0; col++)
+        for (int col = 0; arr[row][col] != NULL; col++)
         {
             printf("arr[%d][%d] = ", row + 1, col + 1);
-            scanf("%f", &arr[row][col]);
+            scanf_s("%f", &arr[row][col]);
         }
 
         printf("\n");
@@ -130,46 +130,61 @@ void printArray2D(float** arr)
     }
 }
 
-errno_t fillArrayFromFile(float** arr, int& rows, char filename[])
+float** getArrayFromFile(float** arr, char filename[])
 {
     FILE* f;
-    if (fopen_s(&f, filename, "r")) return 1;
-
-    fscanf(f, "%d\n", &rows);
-
-    for (int row = 0; row < rows; row++)
+    if (fopen_s(&f, filename, "r")) exit(1);
+    
+    int row = 0;
+    int cols = 0;
+    int pos = ftell(f);
+    while (!feof(f))
     {
-        int col = 0;
-        do {
-            fscanf(f, "%7.2f ", &arr[row][col]);
-        } while (arr[row][col++]);
-        fscanf(f, "\n");
+
+        char currentChar = fgetc(f);
+        if (currentChar == '.') cols++;
+        if (currentChar == '\n')
+        {
+            arr = reallocArray2D(arr, row + 1);
+            arr[row] = (float*)malloc(sizeof(float) * (cols + 1));
+            
+            fseek(f, pos, SEEK_SET);
+            for (int col = 0; col < cols; col++)
+            {
+                fscanf_s(f, "%f", &arr[row][col]);
+            }
+            fscanf_s(f, "\n");
+            pos = ftell(f);
+
+            arr[row][cols] = NULL;
+            cols = 0;
+            row++;
+        }
+
     }
 
     fclose(f);
-    return 0;
+    return arr;
 }
 
-errno_t writeMatrixToFile(float** arr, int rows, char filename[])
+errno_t writeMatrixToFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "w")) return 1;
 
-    fprintf_s(f, "%d\n", rows);
-
-    for (int row = 0; row < rows; row++)
+    for (int row = 0; arr[row] != NULL; row++)
     {
-        int col = 0;
-        do {
-            fprintf_s(f, "%7.2f ", &arr[row][col]);
-        } while (arr[row][col++]);
+        for (int col = 0; arr[row][col] != NULL; col++)
+        {
+            fprintf_s(f, "%7.2f", arr[row][col]);
+        }
         fprintf_s(f, "\n");
     }
 
     return 0;
 }
 
-errno_t fillArrayFromBinFile(float** arr, int &rows, char filename[])
+errno_t fillArrayFromBinFile(float** arr, int& rows, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "rb")) return 1;
@@ -198,11 +213,12 @@ int main()
     switch (askUserAboutFillingArray())
     {
     case 1:
-        printf("Введите количество строк массива: "); scanf("%d", &rows);
+        printf("Введите количество строк массива: "); scanf_s("%d", &rows);
         arr = reallocArray2D(arr, rows);
         fillArrayManually(arr);
         break;
     case 2:
+        arr = getArrayFromFile(arr, filename);
         break;
     case 3:
         break;
@@ -212,6 +228,7 @@ int main()
     }
 
     printArray2D(arr);
+    writeMatrixToFile(arr, filename);
     freeArray(arr);
 
     printf("\n");
