@@ -103,13 +103,6 @@ void mallocArray2DForArray(float** arr, int row, int cols)
     arr[row][cols] = NULL;
 }
 
-int getSizeArray2D(float** arr)
-{
-    int size = 0;
-    while (arr[size++] != NULL);
-    return size;
-}
-
 void printArray2D(float** arr)
 {
     printf("\nМассив:\n");
