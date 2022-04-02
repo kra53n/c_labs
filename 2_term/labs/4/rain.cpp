@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include "window.h"
 
 struct Raindrop
@@ -31,8 +31,12 @@ void updateRaindropLayer(RainLayer& rainLayer)
 {
     for (int rndrop = 0; rndrop < rainLayer.amount; rndrop++)
     {
-        rainLayer.raindrops[rndrop].x += rainLayer.raindrops[rndrop].len * 1;
-        rainLayer.raindrops[rndrop].y += rainLayer.raindrops[rndrop].len * 1;
+        rainLayer.raindrops[rndrop].x += rainLayer.speed *
+            rainLayer.raindrops[rndrop].len /
+            rainLayer.raindrops[rndrop].direction * 50;
+        rainLayer.raindrops[rndrop].y += rainLayer.speed *
+            rainLayer.raindrops[rndrop].len
+            * rainLayer.raindrops[rndrop].direction;
     }
 }
 
@@ -78,10 +82,10 @@ void drawRainLayer(RainLayer rainLayer)
     }
 }
 
-void addRainLayer(Rain& rain)
+void addRainLayer(Rain& rain, float distance, float speed, float direction)
 {
-    RainLayer rainLayer; rainLayer.distance = 10; rainLayer.speed = 10;
-    resetRainLayer(rainLayer, 2);
+    RainLayer rainLayer; rainLayer.distance = distance; rainLayer.speed = speed;
+    resetRainLayer(rainLayer, direction);
 
     rain.rainLayers = (RainLayer*)realloc(rain.rainLayers, sizeof(RainLayer) * (rain.amount+1));
     rain.rainLayers[rain.amount] = rainLayer;
@@ -93,18 +97,20 @@ int main(int argc, char* artgv[])
     init();
     srand(time(0));
 
-    RainLayer rainLayer; rainLayer.distance = 10; rainLayer.speed = 10;
-
     Rain rain;
-    addRainLayer(rain);
 
-    for (int period = 1; period < 100; period++)
+    float frequency = 1;
+    for (int period = 1; period < 100 && frequency < 8; period++)
     {
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
 
-        if (period % 1 == 0)
-            addRainLayer(rain);
+        if (period % (int)frequency == 0)
+        {
+            printf("%d\n", (int)frequency);
+            addRainLayer(rain, 100, 0.9, 10);
+            frequency *= 1.08;
+        }
 
         for (int idx = 0; idx < rain.amount; idx++)
         {
