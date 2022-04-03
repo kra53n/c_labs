@@ -50,17 +50,19 @@ int askUserAboutWritingArray()
         options, sizeof(options) / MAX_STRING_LEN_OPTIONS);
 }
 
-int askUserAboutArrayAction()
+int askUserAboutActionOnArray(int &len)
 {
     char options[][MAX_STRING_LEN_OPTIONS] = {
+    "создать массив",
     "вывести на экран",
     "добавить строку",
     "удалить строку",
     "сохранить",
     "выход",
     };
+    len = sizeof(options) / MAX_STRING_LEN_OPTIONS;
     return askUserOptions("Выберите действие:",
-        options, sizeof(options) / MAX_STRING_LEN_OPTIONS);
+        options, len);
 }
 
 void clearScreen()
@@ -71,44 +73,55 @@ void clearScreen()
 int main()
 {
     float** arr = mallocArray2D();
+    int arrSize;
 
     char filename[] = "im_file.txt";
     char filenameBin[] = "im_file.bin";
 
-    int rows = 0;
-    switch (askUserAboutFillingArray())
-    {
-    case 1:
-        arr = getFilledArrayManually(arr);
-        break;
-    case 2:
-        arr = getArrayFromFile(arr, filename);
-        break;
-    case 3:
-        arr = getArrayFromBinFile(arr, filenameBin);
-        break;
-    case 4:
-        exit(0);
-        break;
-    }
-
-    int action;
+    int action, actionsQuantity;
     do {
-        action = askUserAboutArrayAction();
+        action = askUserAboutActionOnArray(actionsQuantity);
         clearScreen();
 
         switch (action)
         {
         case 1:
-            printArray2D(arr);
+            switch (askUserAboutFillingArray())
+            {
+            case 1:
+                arr = getFilledArrayManually();
+                break;
+            case 2:
+                arr = getArrayFromFile(filename);
+                break;
+            case 3:
+                arr = getArrayFromBinFile(filenameBin);
+                break;
+            }
             break;
         case 2:
-            // add a row
+            printArray2D(arr);
             break;
         case 3:
-            // del a row
+            arrSize = getArray2DSize(arr);
+            if (!arrSize)
+            {
+                printf("Невозможно выполнить операцию, так как размер массива равен 0!\n");
+                continue;
+            }
+            arr = getArray2DWithAddedRow(arr, askUserAboutRow(arrSize+1),
+                askUserAboutNumber("Количество элементов"));
             break;
         case 4:
+            arrSize = getArray2DSize(arr);
+            if (!arrSize)
+            {
+                printf("Невозможно выполнить операцию, так как размер массива равен 0!\n");
+                continue;
+            }
+            arr = getArray2DWithDeletedRow(arr, askUserAboutRow(arrSize));
+            break;
+        case 5:
             switch (askUserAboutWritingArray())
             {
             case 1:
@@ -120,24 +133,9 @@ int main()
             }
             break;
         }
-    } while (action != 5);
+    } while (action != actionsQuantity);
 
-    printArray2D(arr);
-
-    int row = getArray2DSize(arr);
-    printf("\nrow: %d", row);
-    row = 2;
-    arr = getArray2DWithAddedRow(arr, row, 1);
-    arr[row][0] = 7;
-    row++;
-    arr = getArray2DWithAddedRow(arr, row, 1);
-    arr[row][0] = 7;
-    printArray2D(arr);
-
-    arr = getArray2DWithDeletedRow(arr, 0);
-    printArray2D(arr);
-
-    //freeArray(arr);
+    freeArray(arr);
 
     return 0;
 }

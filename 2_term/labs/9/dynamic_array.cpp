@@ -16,20 +16,35 @@ int askUserAboutNumber(char const title[])
     return n;
 }
 
-float** mallocArray2D()
+int askUserAboutRow(int arrSize)
 {
-    float** arr = (float**)malloc(sizeof(float*));
+    int row;
+    bool cond;
+    do {
+        printf("Выберите ряд: "); scanf_s("%d", &row);
+        cond = row < 1 || row > arrSize;
+        if (cond)
+            printf("Вы можете выбрать строку из диапозона от 1 до %d.\n", arrSize);
+    } while (cond);
+    return row - 1;
+}
+
+float** mallocArray2D(int rows)
+{
+    float** arr = (float**)malloc(sizeof(float*) * (rows+1));
     if (arr == NULL)
     {
         printf("Ошибка выделения памяти!");
         exit(1);
     }
+    arr[rows] = NULL;
     return arr;
 }
 
 int getArray2DSize(float** arr)
 {
     int row;
+    if (arr == NULL) return 0;
     for (row = 0; arr[row] != NULL; row++);
     return row;
 }
@@ -46,29 +61,11 @@ float** reallocArray2D(float** arr, int num)
     return arr;
 }
 
-float** getArray2DWithAddedRow(float** arr, int row, int cols)
+void freeArray(float** arr)
 {
-    int rows = getArray2DSize(arr) + 1;
-    arr = reallocArray2D(arr, rows);
-
-    for (int i = rows, j = i - 1; i > row; i--, j--)
-        arr[i] = arr[j];
-
-    mallocArray2DForArray(arr, row, cols);
-    arr[rows + 1] = NULL;
-    return arr;
-}
-
-float** getArray2DWithDeletedRow(float** arr, int row)
-{
-    free(arr[row]);
-
-    int size = getArray2DSize(arr);
-    for (int i = row, j = i + 1; i <= size; i++, j++)
-        arr[i] = arr[j];
-    
-    arr = reallocArray2D(arr, size-1);
-    return arr;
+    for (int row = 0; arr[row] != NULL; row++)
+        free(arr[row]);
+    free(arr);
 }
 
 void mallocArray2DForArray(float** arr, int row, int cols)
@@ -94,19 +91,21 @@ void printArray2D(float** arr)
     printf("\n");
 }
 
-void freeArray(float** arr)
+void fillRowManually(float* rowptr, int row)
 {
-    for (int row = 0; arr[row] != NULL; row++)
-        free(arr[row]);
-    free(arr);
+    for (int col = 0; rowptr[col] != NULL; col++)
+    {
+        printf("arr[%d][%d] = ", row + 1, col + 1);
+        scanf_s("%f", &rowptr[col]);
+    }
 }
 
-float** getFilledArrayManually(float** arr)
+float** getFilledArrayManually()
 {
     int rows, cols;
 
     printf("Введите количество строк массива: "); scanf_s("%d", &rows);
-    arr = reallocArray2D(arr, rows);
+    float** arr = mallocArray2D(rows);
 
     for (int row = 0; arr[row] != NULL; row++)
     {
@@ -114,24 +113,21 @@ float** getFilledArrayManually(float** arr)
         cols = askUserAboutNumber("Введите количество элементов для строки");
         mallocArray2DForArray(arr, row, cols);
 
-        for (int col = 0; arr[row][col] != NULL; col++)
-        {
-            printf("arr[%d][%d] = ", row + 1, col + 1);
-            scanf_s("%f", &arr[row][col]);
-        }
+        fillRowManually(arr[row], row);
         printf("\n");
     }
     return arr;
 }
 
-float** getArrayFromFile(float** arr, char filename[])
+float** getArrayFromFile(char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "r")) exit(1);
 
-    int row = 0;
-    int cols = 0;
+    float** arr = mallocArray2D();
+    int row = 0, cols = 0;
     int pos = ftell(f);
+
     while (!feof(f))
     {
 
@@ -174,13 +170,13 @@ errno_t writeArrayToFile(float** arr, char filename[])
     return 0;
 }
 
-float** getArrayFromBinFile(float** arr, char filename[])
+float** getArrayFromBinFile(char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "rb")) exit(1);
 
     int row = 0, col = 0;
-    arr = reallocArray2D(arr, row);
+    float** arr = mallocArray2D();
     float value;
     while (!feof(f))
     {
@@ -216,4 +212,30 @@ errno_t writeArrayToBinFile(float** arr, char filename[])
     }
 
     return 0;
+}
+
+float** getArray2DWithAddedRow(float** arr, int row, int cols)
+{
+    int rows = getArray2DSize(arr) + 1;
+    arr = reallocArray2D(arr, rows);
+
+    for (int i = rows, j = i - 1; i > row; i--, j--)
+        arr[i] = arr[j];
+
+    mallocArray2DForArray(arr, row, cols);
+    fillRowManually(arr[row], row);
+    arr[rows] = NULL;
+    return arr;
+}
+
+float** getArray2DWithDeletedRow(float** arr, int row)
+{
+    free(arr[row]);
+
+    int size = getArray2DSize(arr) + 1;
+    for (int i = row, j = i + 1; i <= size; i++, j++)
+        arr[i] = arr[j];
+    
+    arr = reallocArray2D(arr, size-1);
+    return arr;
 }
