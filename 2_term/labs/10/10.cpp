@@ -1,6 +1,4 @@
-#include <iostream>
-#include <cstdio>
-//#include <iostream>
+#include <stdio.h>
 
 /* Задания:
  * 3. Определить, сколько слов в тексте начинается на букву К или к
@@ -107,7 +105,7 @@ int main()
 {
 	system("chcp 1251"); system("cls");
 	char str[STRINGLEN]; fillString("Write a string: ", str);
-    char occur[STRINGLEN];
+    	char occur[STRINGLEN];
 
 	switch (askUserAboutTask())
 	{
@@ -119,9 +117,9 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
-        fillString("Write a occurenece string: ", occur);
-        delFirstOccurenceInString(str, occur);
-        printf("\nString: %s", str);
+        	fillString("Write a occurenece string: ", occur);
+        	delFirstOccurenceInString(str, occur);
+        	printf("\nString: %s", str);
 		break;
 	}
 
