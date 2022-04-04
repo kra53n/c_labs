@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include <iostream>
-
+#include <cstdio>
+//#include <iostream>
 
 /* Задания:
  * 3. Определить, сколько слов в тексте начинается на букву К или к
@@ -11,7 +11,7 @@
 const int STRINGLEN = 100;
 const char VOWELS[] = "AEIOUWYaeiouwy";
 
-void filledString(const char title[STRINGLEN], char str[STRINGLEN])
+void fillString(const char title[STRINGLEN], char str[STRINGLEN])
 {
 	printf("%s", title); gets_s(str, STRINGLEN);
 }
@@ -25,7 +25,7 @@ int askUserAboutTask()
 		printf("\t1. Find num of words with started K and k\n");
 		printf("\t2. Find all vowels letters int string\n");
 		printf("\t3. Delete occurrence of the second string in the first string\n");
-		printf("\n\nChoose: "); scanf_s("%d", &choice);
+		printf("\nChoose: "); scanf_s("%d%*c", &choice);
 
 		cond = choice < 1 || choice > 3;
 		if (cond)
@@ -67,15 +67,47 @@ void printVowelsInString(char str[STRINGLEN])
 			printf("%c", VOWELS[i]);
 }
 
-void delFirstOccurenceInString(char dst[STRINGLEN], char src[STRINGLEN])
+void findOccurenceIndexes(char dst[STRINGLEN], char occur[STRINGLEN], int &startidx, int &endidx)
 {
+    for (int i = 0; dst[i] != 0; i++)
+    {
+        bool flag = true;
+        endidx = i;
+        for (int j = 0; occur[j] != 0; j++)
+        {
+            if (dst[endidx++] != occur[j])
+            {
+                flag = false;
+                break;
+            }
+        }
+        if (flag)
+        {
+            startidx = i;
+            break;
+        }
+    }
+}
 
+void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
+{
+    int startidx = -1, endidx = 0;
+    findOccurenceIndexes(dst, occur, startidx, endidx);
+
+    if (startidx != -1)
+    {
+        int j = endidx;
+        for (int i = startidx; dst[j] != 0; i++, j++)
+            dst[i] = dst[j];
+        dst[j] = 0;
+    }
 }
 
 int main()
 {
 	system("chcp 1251"); system("cls");
-	char str[STRINGLEN]; filledString("Write a string: ", str);
+	char str[STRINGLEN]; fillString("Write a string: ", str);
+    char occur[STRINGLEN];
 
 	switch (askUserAboutTask())
 	{
@@ -87,6 +119,9 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
+        fillString("Write a occurenece string: ", occur);
+        delFirstOccurenceInString(str, occur);
+        printf("\nString: %s", str);
 		break;
 	}
 
