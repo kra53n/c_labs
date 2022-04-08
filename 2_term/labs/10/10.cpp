@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 /* Задания:
  * 3. Определить, сколько слов в тексте начинается на букву К или к
@@ -38,8 +39,8 @@ int getSymbolsNumInString(char str[STRINGLEN], char symbol)
 	int num = 0;
 	if (str[0] == symbol) num++;
 	for (int i = 1; str[i] != 0; i++)
-		if (str[i] == symbol && str[i-1] == ' ') num++;
-	
+		if (str[i] == symbol && str[i - 1] == ' ') num++;
+
 	return num;
 }
 
@@ -50,6 +51,13 @@ void copyString(char dst[STRINGLEN], char src[STRINGLEN])
 	dst[i] = 0;
 }
 
+int strLen(char str[STRINGLEN])
+{
+	int len;
+	for (len = 0; str[len] != 0; len++);
+	return len;
+}
+
 void printVowelsInString(char str[STRINGLEN])
 {
 	char vowels[15];
@@ -58,54 +66,53 @@ void printVowelsInString(char str[STRINGLEN])
 	for (int i = 0; str[i] != 0; i++)
 		for (int j = 0; VOWELS[j] != 0; j++)
 			if (VOWELS[j] == str[i]) vowels[j] = '\n';
-	
+
 	printf("Vowels in a string: ");
 	for (int i = 0; vowels[i] != 0; i++)
 		if (vowels[i] == '\n')
 			printf("%c", VOWELS[i]);
 }
 
-void findOccurenceIndexes(char dst[STRINGLEN], char occur[STRINGLEN], int &startidx, int &endidx)
+void findOccurenceIndexes(char dst[STRINGLEN], char occur[STRINGLEN], int& startidx, int& endidx)
 {
-    for (int i = 0; dst[i] != 0; i++)
-    {
-        bool flag = true;
-        endidx = i;
-        for (int j = 0; occur[j] != 0; j++)
-        {
-            if (dst[endidx++] != occur[j])
-            {
-                flag = false;
-                break;
-            }
-        }
-        if (flag)
-        {
-            startidx = i;
-            break;
-        }
-    }
+	for (int i = 0; dst[i] != 0; i++)
+	{
+		bool flag = true;
+		endidx = i;
+		for (int j = 0; occur[j] != 0; j++)
+		{
+			if (dst[endidx++] != occur[j])
+			{
+				flag = false;
+				break;
+			}
+		}
+		if (flag)
+		{
+			startidx = i;
+			break;
+		}
+	}
 }
 
 void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 {
-    int startidx = -1, endidx = 0;
-    findOccurenceIndexes(dst, occur, startidx, endidx);
+	int startidx = -1, endidx = 0;
+	findOccurenceIndexes(dst, occur, startidx, endidx);
 
-    if (startidx != -1)
-    {
-        int j = endidx;
-        for (int i = startidx; dst[j] != 0; i++, j++)
-            dst[i] = dst[j];
-        dst[j] = 0;
-    }
+	if (startidx != -1)
+	{
+		int dstLen = strLen(dst) + 1;
+		for (int i = startidx, j = endidx; j < dstLen; i++, j++)
+			dst[i] = dst[j];
+	}
 }
 
 int main()
 {
 	system("chcp 1251"); system("cls");
 	char str[STRINGLEN]; fillString("Write a string: ", str);
-    	char occur[STRINGLEN];
+	char occur[STRINGLEN];
 
 	switch (askUserAboutTask())
 	{
@@ -117,9 +124,9 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
-        	fillString("Write a occurenece string: ", occur);
-        	delFirstOccurenceInString(str, occur);
-        	printf("\nString: %s", str);
+		fillString("Write a occurenece string: ", occur);
+		delFirstOccurenceInString(str, occur);
+		printf("\nString: %s", str);
 		break;
 	}
 
