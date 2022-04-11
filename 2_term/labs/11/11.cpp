@@ -49,7 +49,7 @@ int getSymbolsNumInString(char str[STRINGLEN], char symbol)
 void printVowelsInString(char str[STRINGLEN])
 {
 	char vowels[15];
-    strcpy(vowels, (char*)VOWELS);
+	strcpy_s(vowels, (char*)VOWELS);
 
 	for (int i = 0; i < strlen(str); i++)
 		for (int j = 0; j < VOWELS_NUM; j++)
@@ -96,11 +96,20 @@ void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 	}
 }
 
+void printStringWithDeletedOccurence(char str[STRINGLEN])
+{
+	char occur[STRINGLEN];
+	fillString("Write a occurenece string: ", occur);
+	delFirstOccurenceInString(str, occur);
+	printf("\nString: %s", str);
+}
+
 int main()
 {
 	system("chcp 1251"); system("cls");
-	char str[STRINGLEN]; fillString("Write a string: ", str);
-	char occur[STRINGLEN];
+	
+	char str[STRINGLEN];
+	fillString("Write a string: ", str);
 
 	switch (askUserAboutTask())
 	{
@@ -112,9 +121,7 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
-		fillString("Write a occurenece string: ", occur);
-		delFirstOccurenceInString(str, occur);
-		printf("\nString: %s", str);
+		printStringWithDeletedOccurence(str);
 		break;
 	}
 
