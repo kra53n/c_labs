@@ -108,6 +108,14 @@ void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 	}
 }
 
+void printDeletedFirstOccurenceInString(char str[STRINGLEN])
+{
+	char occur[STRINGLEN];
+	fillString("Write a occurenece string: ", occur);
+	delFirstOccurenceInString(str, occur);
+	printf("\nString: %s", str);
+}
+
 int main()
 {
 	system("chcp 1251"); system("cls");
@@ -124,9 +132,7 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
-		fillString("Write a occurenece string: ", occur);
-		delFirstOccurenceInString(str, occur);
-		printf("\nString: %s", str);
+		printDeletedFirstOccurenceInString(str);
 		break;
 	}
 
