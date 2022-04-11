@@ -119,8 +119,9 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 int main()
 {
 	system("chcp 1251"); system("cls");
-	char str[STRINGLEN]; fillString("Write a string: ", str);
-	char occur[STRINGLEN];
+	
+	char str[STRINGLEN];
+	fillString("Write a string: ", str);
 
 	switch (askUserAboutTask())
 	{
