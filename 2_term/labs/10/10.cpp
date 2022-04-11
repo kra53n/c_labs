@@ -108,7 +108,7 @@ void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 	}
 }
 
-void printDeletedFirstOccurenceInString(char str[STRINGLEN])
+void printStringWithDeletedOccurence(char str[STRINGLEN])
 {
 	char occur[STRINGLEN];
 	fillString("Write a occurenece string: ", occur);
@@ -132,7 +132,7 @@ int main()
 		printVowelsInString(str);
 		break;
 	case 3:
-		printDeletedFirstOccurenceInString(str);
+		printStringWithDeletedOccurence(str);
 		break;
 	}
 
