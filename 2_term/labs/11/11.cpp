@@ -40,7 +40,9 @@ int getSymbolsNumInString(char str[STRINGLEN], char symbol)
 {
 	int num = 0;
 	if (str[0] == symbol) num++;
-	for (int i = 1; i < strlen(str); i++)
+
+	int slen = strlen(str);
+	for (int i = 1; i < slen; i++)
 		if (str[i] == symbol && str[i - 1] == ' ') num++;
 
 	return num;
@@ -51,7 +53,8 @@ void printVowelsInString(char str[STRINGLEN])
 	char vowels[15];
 	strcpy_s(vowels, (char*)VOWELS);
 
-	for (int i = 0; i < strlen(str); i++)
+	int slen = strlen(str);
+	for (int i = 0; i < slen; i++)
 		for (int j = 0; j < VOWELS_NUM; j++)
 			if (VOWELS[j] == str[i]) vowels[j] = 0;
 

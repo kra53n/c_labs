@@ -47,7 +47,7 @@ int getSymbolsNumInString(char str[STRINGLEN], char symbol)
 void copyString(char dst[STRINGLEN], char src[STRINGLEN])
 {
 	int i = 0;
-	for (; src[i] != 0; i++) dst[i] = VOWELS[i];
+	for (; src[i] != 0; i++) dst[i] = src[i];
 	dst[i] = 0;
 }
 
@@ -119,8 +119,9 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 int main()
 {
 	system("chcp 1251"); system("cls");
-	char str[STRINGLEN]; fillString("Write a string: ", str);
-	char occur[STRINGLEN];
+
+	char str[STRINGLEN];
+	fillString("Write a string: ", str);
 
 	switch (askUserAboutTask())
 	{
