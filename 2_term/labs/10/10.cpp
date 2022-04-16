@@ -63,14 +63,16 @@ void printVowelsInString(char str[STRINGLEN])
 	char vowels[15];
 	copyString(vowels, (char*)VOWELS);
 
+    int slen = strLen((char*)VOWELS);
 	for (int i = 0; str[i] != 0; i++)
 		for (int j = 0; VOWELS[j] != 0; j++)
-			if (VOWELS[j] == str[i]) vowels[j] = '\n';
+			if (VOWELS[j] == str[i]) vowels[j] = 0;
 
 	printf("Vowels in a string: ");
-	for (int i = 0; vowels[i] != 0; i++)
-		if (vowels[i] == '\n')
+	for (int i = 0; i < slen; i++)
+		if (vowels[i] == 0)
 			printf("%c", VOWELS[i]);
+    printf("\n");
 }
 
 void findOccurenceIndexes(char dst[STRINGLEN], char occur[STRINGLEN], int& startidx, int& endidx)
@@ -118,19 +120,15 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 
 int main()
 {
-	system("chcp 1251"); system("cls");
-<<<<<<< HEAD
+	//system("chcp 1251"); system("cls");
 
-=======
-	
->>>>>>> 0dec62e6573f365405bee4acc8194f490fb04083
 	char str[STRINGLEN];
 	fillString("Write a string: ", str);
 
 	switch (askUserAboutTask())
 	{
 	case 1:
-		printf("Number of k and K: %d", getSymbolsNumInString(str, 'k') +
+		printf("Number of k and K: %d\n", getSymbolsNumInString(str, 'k') +
 			getSymbolsNumInString(str, 'K'));
 		break;
 	case 2:
