@@ -119,7 +119,11 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 int main()
 {
 	system("chcp 1251"); system("cls");
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 0dec62e6573f365405bee4acc8194f490fb04083
 	char str[STRINGLEN];
 	fillString("Write a string: ", str);
 
