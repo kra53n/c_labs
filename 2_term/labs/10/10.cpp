@@ -120,7 +120,7 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 
 int main()
 {
-	//system("chcp 1251"); system("cls");
+	system("chcp 1251"); system("cls");
 
 	char str[STRINGLEN];
 	fillString("Write a string: ", str);

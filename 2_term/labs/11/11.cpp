@@ -36,22 +36,19 @@ int askUserAboutTask()
 	return choice;
 }
 
-int getSymbolsNumInString(char str[STRINGLEN], char symbol)
+int getSymbolNumInString(char str[STRINGLEN], char symbol)
 {
 	int num = 0;
-	if (str[0] == symbol) num++;
-
-	int slen = strlen(str);
-	for (int i = 1; i < slen; i++)
-		if (str[i] == symbol && str[i - 1] == ' ') num++;
-
+    if (str[0] == symbol) num++;
+    for (char*strptr = strchr(str+1, symbol); strptr != NULL; strptr = strchr(strptr+1, symbol))
+        if (strptr[-1] == ' ') num++;
 	return num;
 }
 
-void printVowelsInString(char str[STRINGLEN])
+void printStringVowels(char str[STRINGLEN])
 {
 	char vowels[15];
-	strcpy_s(vowels, (char*)VOWELS);
+	strcpy(vowels, (char*)VOWELS);
 
 	int slen = strlen(str);
 	for (int i = 0; i < slen; i++)
@@ -62,41 +59,23 @@ void printVowelsInString(char str[STRINGLEN])
 	for (int i = 0; i < VOWELS_NUM; i++)
 		if (!vowels[i])
 			printf("%c", VOWELS[i]);
-}
-
-void findOccurenceIndexes(char dst[STRINGLEN], char occur[STRINGLEN], int& startidx, int& endidx)
-{
-	for (int i = 0; dst[i] != 0; i++)
-	{
-		bool flag = true;
-		endidx = i;
-		for (int j = 0; occur[j] != 0; j++)
-		{
-			if (dst[endidx++] != occur[j])
-			{
-				flag = false;
-				break;
-			}
-		}
-		if (flag)
-		{
-			startidx = i;
-			break;
-		}
-	}
+    printf("\n");
 }
 
 void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 {
-	int startidx = -1, endidx = 0;
-	findOccurenceIndexes(dst, occur, startidx, endidx);
-
-	if (startidx != -1)
-	{
-		int dstLen = strlen(dst) + 1;
-		for (int i = startidx, j = endidx; j < dstLen; i++, j++)
-			dst[i] = dst[j];
-	}
+    int lenOccur = strlen(occur) - 1;
+    for (char* dstptr = strchr(dst, *occur); dstptr != NULL; dstptr = strchr(dstptr+1, *occur))
+    {
+        if (!strncmp(dstptr, occur, lenOccur))
+        {
+            char res[STRINGLEN];
+            strncpy(res, dst, abs(dst - dstptr) / sizeof(char));
+            strcat(res, dst+lenOccur+1);
+            dst = res;
+	printf("\nString: %s", res);
+        }
+    }
 }
 
 void printStringWithDeletedOccurence(char str[STRINGLEN])
@@ -117,11 +96,11 @@ int main()
 	switch (askUserAboutTask())
 	{
 	case 1:
-		printf("Number of k and K: %d", getSymbolsNumInString(str, 'k') +
-			getSymbolsNumInString(str, 'K'));
+		printf("Number of k and K: %d\n", getSymbolNumInString(str, 'k') +
+			getSymbolNumInString(str, 'K'));
 		break;
 	case 2:
-		printVowelsInString(str);
+		printStringVowels(str);
 		break;
 	case 3:
 		printStringWithDeletedOccurence(str);
