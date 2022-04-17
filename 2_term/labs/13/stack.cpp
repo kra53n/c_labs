@@ -23,7 +23,7 @@ void StackDestroy(Stack* s)
 void StackPush(Stack* s, double value)
 {
 	s->top++;
-	if (s->top >= s->len - 1)
+	if (s->top >= s->len)
 		s->elems = (double*)realloc(s->elems, sizeof(double) * (s->top + 1));
 	s->elems[s->top] = value;
 }
