@@ -39,16 +39,16 @@ int askUserAboutTask()
 int getSymbolNumInString(char str[STRINGLEN], char symbol)
 {
 	int num = 0;
-    if (str[0] == symbol) num++;
-    for (char*strptr = strchr(str+1, symbol); strptr != NULL; strptr = strchr(strptr+1, symbol))
-        if (strptr[-1] == ' ') num++;
+	if (str[0] == symbol) num++;
+	for (char* strptr = strchr(str + 1, symbol); strptr != NULL; strptr = strchr(strptr + 1, symbol))
+		if (strptr[-1] == ' ') num++;
 	return num;
 }
 
 void printStringVowels(char str[STRINGLEN])
 {
 	char vowels[15];
-	strcpy(vowels, (char*)VOWELS);
+	strcpy_s(vowels, (char*)VOWELS);
 
 	int slen = strlen(str);
 	for (int i = 0; i < slen; i++)
@@ -59,23 +59,22 @@ void printStringVowels(char str[STRINGLEN])
 	for (int i = 0; i < VOWELS_NUM; i++)
 		if (!vowels[i])
 			printf("%c", VOWELS[i]);
-    printf("\n");
+	printf("\n");
 }
 
 void delFirstOccurenceInString(char dst[STRINGLEN], char occur[STRINGLEN])
 {
-    int lenOccur = strlen(occur) - 1;
-    for (char* dstptr = strchr(dst, *occur); dstptr != NULL; dstptr = strchr(dstptr+1, *occur))
-    {
-        if (!strncmp(dstptr, occur, lenOccur))
-        {
-            char res[STRINGLEN];
-            strncpy(res, dst, abs(dst - dstptr) / sizeof(char));
-            strcat(res, dst+lenOccur+1);
-            dst = res;
-	printf("\nString: %s", res);
-        }
-    }
+	int lenOccur = strlen(occur);
+	for (char* dstptr = strchr(dst, *occur); dstptr != NULL; dstptr = strchr(dstptr + 1, *occur))
+	{
+		if (!strncmp(dstptr, occur, lenOccur))
+		{
+			char tmp[STRINGLEN];
+			strncpy_s(tmp, dst, abs(dst - dstptr) / sizeof(char));
+			strcat_s(tmp, dst + lenOccur + 1);
+			strcpy_s(dst, STRINGLEN, tmp);
+		}
+	}
 }
 
 void printStringWithDeletedOccurence(char str[STRINGLEN])
@@ -89,7 +88,7 @@ void printStringWithDeletedOccurence(char str[STRINGLEN])
 int main()
 {
 	system("chcp 1251"); system("cls");
-	
+
 	char str[STRINGLEN];
 	fillString("Write a string: ", str);
 
