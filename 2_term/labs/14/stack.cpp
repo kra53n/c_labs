@@ -50,7 +50,7 @@ void StackClear(Stack* s)
 	while (!StackIsEmpty(s)) StackPop(s);
 }
 
-int StackIsEmpty(const Stack* s)
+bool StackIsEmpty(const Stack* s)
 {
 	return s->top == NULL;
 }

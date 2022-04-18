@@ -19,6 +19,6 @@ double StackPop(Stack* s);
 double StackPeek(const Stack* s);
 void StackClear(Stack* s);
 
-int StackIsEmpty(const Stack* s);
+bool StackIsEmpty(const Stack* s);
 
 void StackPrint(const Stack* s);
