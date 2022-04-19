@@ -33,7 +33,7 @@ int askUserOptions(
     return option;
 }
 
-int askUserAboutFillingArray()
+int askUserAboutFillingArray2D()
 {
     char options[][MAX_STRING_LEN_OPTIONS] = {
         "создать массив, заполнив вручную",
@@ -45,7 +45,7 @@ int askUserAboutFillingArray()
         options, sizeof(options) / MAX_STRING_LEN_OPTIONS);
 }
 
-int askUserAboutWritingArray()
+int askUserAboutWritingArray2D()
 {
     char options[][MAX_STRING_LEN_OPTIONS] = {
         "сохранить массив в текстовый файл",
@@ -92,7 +92,7 @@ float** reallocArray2D(float** arr, int num)
     return arr;
 }
 
-void mallocArray2DForArray(float** arr, int row, int cols)
+void mallocArrayForArray2D(float** arr, int row, int cols)
 {
     arr[row] = (float*)malloc(sizeof(float) * (cols + 1));
     if (arr[row] == NULL)
@@ -115,21 +115,21 @@ void printArray2D(float** arr)
     printf("\n");
 }
 
-void freeArray(float** arr)
+void freeAray2D(float** arr)
 {
     for (int row = 0; arr[row] != NULL; row++)
         free(arr[row]);
     free(arr);
 }
 
-void fillArrayManually(float** arr)
+void fillArray2DManually(float** arr)
 {
     int cols;
     for (int row = 0; arr[row] != NULL; row++)
     {
         printf("[%d] ", row + 1);
         cols = askUserAboutNumber("Введите количество элементов для строки");
-        mallocArray2DForArray(arr, row, cols);
+        mallocArrayForArray2D(arr, row, cols);
 
         for (int col = 0; arr[row][col] != NULL; col++)
         {
@@ -141,7 +141,7 @@ void fillArrayManually(float** arr)
     }
 }
 
-float** getArrayFromFile(float** arr, char filename[])
+float** getArray2DFromFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "r")) exit(1);
@@ -175,7 +175,7 @@ float** getArrayFromFile(float** arr, char filename[])
     return arr;
 }
 
-errno_t writeArrayToFile(float** arr, char filename[])
+errno_t writeArray2DToFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "w")) return 1;
@@ -191,7 +191,7 @@ errno_t writeArrayToFile(float** arr, char filename[])
     return 0;
 }
 
-float** getArrayFromBinFile(float** arr, char filename[])
+float** getArray2DFromBinFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "rb")) exit(1);
@@ -219,7 +219,7 @@ float** getArrayFromBinFile(float** arr, char filename[])
     return arr;
 }
 
-errno_t writeArrayToBinFile(float** arr, char filename[])
+errno_t writeArray2DToBinFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "wb")) return 1;
@@ -244,18 +244,18 @@ int main()
     char filenameBin[] = "im_file.bin";
 
     int rows = 0;
-    switch (askUserAboutFillingArray())
+    switch (askUserAboutFillingArray2D())
     {
     case 1:
         printf("Введите количество строк массива: "); scanf_s("%d", &rows);
         arr = reallocArray2D(arr, rows);
-        fillArrayManually(arr);
+        fillArray2DManually(arr);
         break;
     case 2:
-        arr = getArrayFromFile(arr, filename);
+        arr = getArray2DFromFile(arr, filename);
         break;
     case 3:
-        arr = getArrayFromBinFile(arr, filenameBin);
+        arr = getArray2DFromBinFile(arr, filenameBin);
         break;
     case 4:
         exit(0);
@@ -264,17 +264,17 @@ int main()
     
     printArray2D(arr);
 
-    switch (askUserAboutWritingArray())
+    switch (askUserAboutWritingArray2D())
     {
     case 1:
-        writeArrayToFile(arr, filename);
+        writeArray2DToFile(arr, filename);
         break;
     case 2:
-        writeArrayToBinFile(arr, filenameBin);
+        writeArray2DToBinFile(arr, filenameBin);
         break;
     }
     
-    freeArray(arr);
+    freeAray2D(arr);
     
     return 0;
 }
