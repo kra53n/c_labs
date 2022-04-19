@@ -61,14 +61,14 @@ float** reallocArray2D(float** arr, int num)
     return arr;
 }
 
-void freeArray(float** arr)
+void freeArray2D(float** arr)
 {
     for (int row = 0; arr[row] != NULL; row++)
         free(arr[row]);
     free(arr);
 }
 
-void mallocArray2DForArray(float** arr, int row, int cols)
+void mallocArrayForArray2D(float** arr, int row, int cols)
 {
     arr[row] = (float*)malloc(sizeof(float) * (cols + 1));
     if (arr[row] == NULL)
@@ -100,7 +100,7 @@ void fillRowManually(float* rowptr, int row)
     }
 }
 
-float** getFilledArrayManually()
+float** getFilledArray2DManually()
 {
     int rows, cols;
 
@@ -111,7 +111,7 @@ float** getFilledArrayManually()
     {
         printf("[%d] ", row + 1);
         cols = askUserAboutNumber("Введите количество элементов для строки");
-        mallocArray2DForArray(arr, row, cols);
+        mallocArrayForArray2D(arr, row, cols);
 
         fillRowManually(arr[row], row);
         printf("\n");
@@ -119,7 +119,7 @@ float** getFilledArrayManually()
     return arr;
 }
 
-float** getArrayFromFile(char filename[])
+float** getArray2D(char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "r")) exit(1);
@@ -154,7 +154,7 @@ float** getArrayFromFile(char filename[])
     return arr;
 }
 
-errno_t writeArrayToFile(float** arr, char filename[])
+errno_t writeArray2DToFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "w")) return 1;
@@ -170,7 +170,7 @@ errno_t writeArrayToFile(float** arr, char filename[])
     return 0;
 }
 
-float** getArrayFromBinFile(char filename[])
+float** getArray2DFromBinFile(char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "rb")) exit(1);
@@ -198,7 +198,7 @@ float** getArrayFromBinFile(char filename[])
     return arr;
 }
 
-errno_t writeArrayToBinFile(float** arr, char filename[])
+errno_t writeArray2DToBinFile(float** arr, char filename[])
 {
     FILE* f;
     if (fopen_s(&f, filename, "wb")) return 1;
@@ -222,7 +222,7 @@ float** getArray2DWithAddedRow(float** arr, int row, int cols)
     for (int i = rows, j = i - 1; i > row; i--, j--)
         arr[i] = arr[j];
 
-    mallocArray2DForArray(arr, row, cols);
+    mallocArrayForArray2D(arr, row, cols);
     fillRowManually(arr[row], row);
     arr[rows] = NULL;
     return arr;

@@ -89,13 +89,13 @@ int main()
             switch (askUserAboutFillingArray())
             {
             case 1:
-                arr = getFilledArrayManually();
+                arr = getFilledArray2DManually();
                 break;
             case 2:
-                arr = getArrayFromFile(filename);
+                arr = getArray2D(filename);
                 break;
             case 3:
-                arr = getArrayFromBinFile(filenameBin);
+                arr = getArray2DFromBinFile(filenameBin);
                 break;
             }
             break;
@@ -125,17 +125,17 @@ int main()
             switch (askUserAboutWritingArray())
             {
             case 1:
-                writeArrayToFile(arr, filename);
+                writeArray2DToFile(arr, filename);
                 break;
             case 2:
-                writeArrayToBinFile(arr, filenameBin);
+                writeArray2DToBinFile(arr, filenameBin);
                 break;
             }
             break;
         }
     } while (action != actionsQuantity);
 
-    freeArray(arr);
+    freeArray2D(arr);
 
     return 0;
 }
