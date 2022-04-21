@@ -34,7 +34,7 @@ int askUserAboutTask()
 	return choice;
 }
 
-int getSymbolsNumInString(char str[STRINGLEN], char symbol)
+int getSymbolNumInString(char str[STRINGLEN], char symbol)
 {
 	int num = 0;
 	if (str[0] == symbol) num++;
@@ -58,7 +58,7 @@ int strLen(char str[STRINGLEN])
 	return len;
 }
 
-void printVowelsInString(char str[STRINGLEN])
+void printStringVowels(char str[STRINGLEN])
 {
 	char vowels[15];
 	copyString(vowels, (char*)VOWELS);
@@ -128,11 +128,11 @@ int main()
 	switch (askUserAboutTask())
 	{
 	case 1:
-		printf("Number of k and K: %d\n", getSymbolsNumInString(str, 'k') +
-			getSymbolsNumInString(str, 'K'));
+		printf("Number of k and K: %d\n", getSymbolNumInString(str, 'k') +
+			getSymbolNumInString(str, 'K'));
 		break;
 	case 2:
-		printVowelsInString(str);
+		printStringVowels(str);
 		break;
 	case 3:
 		printStringWithDeletedOccurence(str);
