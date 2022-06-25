@@ -11,9 +11,6 @@ void QueueClear(Queue& q)
 		cur = elem->next;
 		free(elem);
 	}
-
-	q.head;
-
 	q.head = NULL;
 }
 
@@ -45,8 +42,6 @@ int QueuePull(Queue& q)
 		return 0;
 	}
 	
-	int d = q.head->data;
-
 	if (q.head == q.tail)
 	{
 		q.tail = NULL;
@@ -54,6 +49,7 @@ int QueuePull(Queue& q)
 
 	Element* elem = q.head;
 	q.head = q.head->next;
+	int d = elem->data;
 	free(elem);
 	
 	return d;
@@ -65,8 +61,7 @@ int QueuePeek(const Queue& q)
 	{
 		return 0;
 	}
-	int d = q.head->data;
-	return d;
+	return q.head->data;
 }
 
 bool QueueIsEmpty(const Queue& q)
