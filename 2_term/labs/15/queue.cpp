@@ -49,10 +49,10 @@ int QueuePull(Queue& q)
 
 	Element* elem = q.head;
 	q.head = elem->next;
-	int d = elem->data;
+	int data = elem->data;
 	free(elem);
 	
-	return d;
+	return data;
 }
 
 int QueuePeek(const Queue& q)
