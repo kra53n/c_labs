@@ -48,7 +48,7 @@ int QueuePull(Queue& q)
 	}
 
 	Element* elem = q.head;
-	q.head = q.head->next;
+	q.head = elem->next;
 	int d = elem->data;
 	free(elem);
 	
