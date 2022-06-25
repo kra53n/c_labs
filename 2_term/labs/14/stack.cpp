@@ -16,8 +16,7 @@ void StackDestroy(Stack* s)
 int StackPush(Stack* s, double value)
 {
 	Elem* elem = (Elem*)malloc(sizeof(Elem));
-	if (!elem)
-		return 0;
+	if (!elem) return 0;
 	elem->next = s->top;
 	elem->value = value;
 	s->top = elem;
@@ -47,7 +46,8 @@ double StackPeek(const Stack* s)
 
 void StackClear(Stack* s)
 {
-	while (!StackIsEmpty(s)) StackPop(s);
+	while (!StackIsEmpty(s))
+		StackPop(s);
 }
 
 bool StackIsEmpty(const Stack* s)
