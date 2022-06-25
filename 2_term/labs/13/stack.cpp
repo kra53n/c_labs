@@ -49,9 +49,7 @@ void StackClear(Stack* s)
 
 int StackIsEmpty(Stack* const s)
 {
-	if (s->top < 0)
-		return 1;
-	return 0;
+	return s->top < 0;
 }
 
 void StackPrint(Stack* s)
