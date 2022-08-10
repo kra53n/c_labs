@@ -23,7 +23,7 @@ bool ListIsEmpty(const List& list)
 	return list.head == NULL;
 }
 
-zvoid ListPush(List& list, int d)
+void ListPush(List& list, int d)
 {
 	for (Element* cur = list.head; cur != NULL; cur = cur->next)
 	{
