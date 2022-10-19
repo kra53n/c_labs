@@ -29,5 +29,5 @@ int main()
 
     printf("\nМинимальное число в массиве: %.3lf", arr[minIndF(arr, arrSize)]);
 
-    return 0;
+   return 0;
 }
